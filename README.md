@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Symfony Standard Edition
 ========================
 
@@ -67,3 +68,7 @@ Enjoy!
 [11]: https://symfony.com/doc/3.1/logging.html
 [12]: https://symfony.com/doc/3.1/assetic/asset_management.html
 [13]: https://symfony.com/doc/current/bundles/SensioGeneratorBundle/index.html
+=======
+# goblin-town
+Town of Nerds
+>>>>>>> 37c6f574ce64d0057b10951d89f33a7c45363a66
