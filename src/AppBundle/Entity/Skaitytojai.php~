@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Skaitytojai
+ *
+ * @ORM\Table(name="skaitytojai")
+ * @ORM\Entity
+ */
+class Skaitytojai
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vardas", type="string", length=40, nullable=false)
+     */
+    private $vardas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pavarde", type="string", length=50, nullable=false)
+     */
+    private $pavarde;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="el_pastas", type="string", length=255, nullable=false)
+     */
+    private $elPastas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="telefono_nr", type="integer", nullable=false)
+     */
+    private $telefonoNr;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="miestas", type="string", length=35, nullable=false)
+     */
+    private $miestas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adresas", type="string", length=255, nullable=false)
+     */
+    private $adresas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="asmens_kodas", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $asmensKodas;
+
+
+}
+

@@ -1,0 +1,74 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Rezervacijos
+ *
+ * @ORM\Table(name="rezervacijos", indexes={@ORM\Index(name="fk_skaitytojas_idx", columns={"fk_skaitytojas"}), @ORM\Index(name="fk_knyga_idx", columns={"fk_knyga"})})
+ * @ORM\Entity
+ */
+class Rezervacijos
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="data", type="datetime", nullable=false)
+     */
+    private $data;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="vieta_eileje", type="integer", nullable=true)
+     */
+    private $vietaEileje;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="pajudejo_eile_data", type="datetime", nullable=true)
+     */
+    private $pajudejoEileData;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="busena", type="string", length=20, nullable=true)
+     */
+    private $busena;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Skaitytojai
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Skaitytojai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_skaitytojas", referencedColumnName="asmens_kodas")
+     * })
+     */
+    private $fkSkaitytojas;
+
+    /**
+     * @var \AppBundle\Entity\Knygos
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Knygos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_knyga", referencedColumnName="kodas")
+     * })
+     */
+    private $fkKnyga;
+
+
+}
+

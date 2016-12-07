@@ -1,0 +1,98 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Uzsakymai
+ *
+ * @ORM\Table(name="uzsakymai", indexes={@ORM\Index(name="fk_knyga_idx", columns={"fk_knyga"}), @ORM\Index(name="fk_darbuotojas_idx", columns={"fk_darbuotojas"}), @ORM\Index(name="fk_skaitytojas_idx", columns={"fk_skaitytojas"})})
+ * @ORM\Entity
+ */
+class Uzsakymai
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="paemimo_data", type="datetime", nullable=false)
+     */
+    private $paemimoData;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="sutarta_grazinimo_data", type="datetime", nullable=false)
+     */
+    private $sutartaGrazinimoData;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="faktine_grazinimo_data", type="datetime", nullable=false)
+     */
+    private $faktineGrazinimoData;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="paemimo_salygos", type="string", length=10, nullable=false)
+     */
+    private $paemimoSalygos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="busena", type="string", length=20, nullable=false)
+     */
+    private $busena;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="skolos_tarifas_uz_diena", type="decimal", precision=3, scale=2, nullable=true)
+     */
+    private $skolosTarifasUzDiena;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Skaitytojai
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Skaitytojai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_skaitytojas", referencedColumnName="asmens_kodas")
+     * })
+     */
+    private $fkSkaitytojas;
+
+    /**
+     * @var \AppBundle\Entity\Knygos
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Knygos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_knyga", referencedColumnName="kodas")
+     * })
+     */
+    private $fkKnyga;
+
+    /**
+     * @var \AppBundle\Entity\Darbuotojai
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Darbuotojai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_darbuotojas", referencedColumnName="tabelio_nr")
+     * })
+     */
+    private $fkDarbuotojas;
+
+
+}
+

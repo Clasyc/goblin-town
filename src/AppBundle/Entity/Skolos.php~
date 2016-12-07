@@ -1,0 +1,64 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Skolos
+ *
+ * @ORM\Table(name="skolos")
+ * @ORM\Entity
+ */
+class Skolos
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="busena", type="string", length=20, nullable=true)
+     */
+    private $busena;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="suma", type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $suma;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="aprasymas", type="string", length=100, nullable=true)
+     */
+    private $aprasymas;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="apmokejimo_data", type="date", nullable=true)
+     */
+    private $apmokejimoData;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fk_uzsakymas", type="integer", nullable=true)
+     */
+    private $fkUzsakymas;
+
+    /**
+     * @var \AppBundle\Entity\Uzsakymai
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Uzsakymai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id", referencedColumnName="id")
+     * })
+     */
+    private $id;
+
+
+}
+

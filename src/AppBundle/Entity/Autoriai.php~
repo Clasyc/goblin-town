@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Autoriai
+ *
+ * @ORM\Table(name="autoriai")
+ * @ORM\Entity
+ */
+class Autoriai
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vardas", type="string", length=30, nullable=false)
+     */
+    private $vardas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pavarde", type="string", length=30, nullable=false)
+     */
+    private $pavarde;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tautybe", type="string", length=20, nullable=false)
+     */
+    private $tautybe;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="gimimo_data", type="date", nullable=false)
+     */
+    private $gimimoData;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="mirties_data", type="date", nullable=true)
+     */
+    private $mirtiesData;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

@@ -1,0 +1,82 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Darbuotojai
+ *
+ * @ORM\Table(name="darbuotojai")
+ * @ORM\Entity
+ */
+class Darbuotojai
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vardas", type="string", length=40, nullable=false)
+     */
+    private $vardas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pavarde", type="string", length=40, nullable=false)
+     */
+    private $pavarde;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="el_pastas", type="string", length=255, nullable=false)
+     */
+    private $elPastas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="telefono_nr", type="integer", nullable=false)
+     */
+    private $telefonoNr;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gyvenamoji_vieta", type="string", length=100, nullable=false)
+     */
+    private $gyvenamojiVieta;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="gimimo_data", type="date", nullable=true)
+     */
+    private $gimimoData;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dirba_nuo", type="date", nullable=true)
+     */
+    private $dirbaNuo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fk_fosuser", type="integer", nullable=true)
+     */
+    private $fkFosuser;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tabelio_nr", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $tabelioNr;
+
+
+}
+

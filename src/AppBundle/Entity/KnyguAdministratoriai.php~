@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * KnyguAdministratoriai
+ *
+ * @ORM\Table(name="knygu_administratoriai")
+ * @ORM\Entity
+ */
+class KnyguAdministratoriai
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vardas", type="string", length=30, nullable=false)
+     */
+    private $vardas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pavarde", type="string", length=30, nullable=false)
+     */
+    private $pavarde;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="el_pastas", type="string", length=50, nullable=false)
+     */
+    private $elPastas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fk_fosuser", type="integer", nullable=false)
+     */
+    private $fkFosuser;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

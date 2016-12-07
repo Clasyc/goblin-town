@@ -1,0 +1,125 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Knygos
+ *
+ * @ORM\Table(name="knygos", indexes={@ORM\Index(name="fk_kalba_idx", columns={"fk_kalba"}), @ORM\Index(name="fk_zanras_idx", columns={"fk_zanras"}), @ORM\Index(name="fk_autorius_idx", columns={"fk_autorius"}), @ORM\Index(name="fk_knygu_admin_idx", columns={"fk_knygu_admin"}), @ORM\Index(name="fk_leidykla_idx", columns={"fk_leidykla"})})
+ * @ORM\Entity
+ */
+class Knygos
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="isbn_kodas", type="string", length=13, nullable=false)
+     */
+    private $isbnKodas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pavadinimas", type="string", length=255, nullable=false)
+     */
+    private $pavadinimas;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="metai", type="date", nullable=false)
+     */
+    private $metai;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="puslapiai", type="integer", nullable=false)
+     */
+    private $puslapiai;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="ar_uzsakyta", type="boolean", nullable=true)
+     */
+    private $arUzsakyta;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="kodas", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $kodas;
+
+    /**
+     * @var \AppBundle\Entity\Zanrai
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Zanrai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_zanras", referencedColumnName="id")
+     * })
+     */
+    private $fkZanras;
+
+    /**
+     * @var \AppBundle\Entity\Leidyklos
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Leidyklos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_leidykla", referencedColumnName="id")
+     * })
+     */
+    private $fkLeidykla;
+
+    /**
+     * @var \AppBundle\Entity\KnyguAdministratoriai
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\KnyguAdministratoriai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_knygu_admin", referencedColumnName="id")
+     * })
+     */
+    private $fkKnyguAdmin;
+
+    /**
+     * @var \AppBundle\Entity\Autoriai
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Autoriai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_autorius", referencedColumnName="id")
+     * })
+     */
+    private $fkAutorius;
+
+    /**
+     * @var \AppBundle\Entity\Kalbos
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Kalbos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_kalba", referencedColumnName="id")
+     * })
+     */
+    private $fkKalba;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\NoruSarasai", mappedBy="fkKnyga")
+     */
+    private $fkNoruSarasai;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->fkNoruSarasai = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+}
+
