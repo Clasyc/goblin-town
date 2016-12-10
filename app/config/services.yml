@@ -7,3 +7,8 @@ services:
     authentication.handler.login_success_handler:
         class:  AppBundle\Security\LoginSuccessHandler
         arguments:  ['@router', '@security.authorization_checker']
+    app_user.password_change:
+            class: AppBundle\EventListener\ChangePasswordListener
+            arguments: ['@router']
+            tags:
+                - { name: kernel.event_subscriber }

@@ -12,7 +12,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts %}
+    {% javascripts
+    '@AppBundle/Resources/public/js/readers-list/readers-list.js'
+    %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
@@ -21,7 +23,7 @@
     <div class="panel panel-library">
         <div class="panel-heading">
             <div class="row">
-                    <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; KNYGOS
+                    <span class="glyphicon glyphicon-user"></span> SKAITYTOJAI
             </div>
         </div>
         <div class="panel-body">
@@ -29,49 +31,43 @@
                 <div class="col-sm-1">
                     Nr.
                 </div>
+                <div class="col-sm-2">
+                    Skaitytojas
+                </div>
                 <div class="col-sm-3">
-                    Pavadinimas
-                </div>
-                <div class="col-sm-1">
-                    Metai
+                   El.paštas
                 </div>
                 <div class="col-sm-2">
-                    Autorius
-                </div>
-                <div class="col-sm-2">
-                    Žanras
-                </div>
-                <div class="col-sm-1">
-                    Kalba
+                    Telefonas
                 </div>
                 <div class="col-md-2">
                     Veiksmai
                 </div>
             </div>
-            {% for book in pagination %}
+            {% for reader in pagination %}
                 <div class="book-list-element">
                     <div class="row">
                         <div class="col-sm-1">
-                            {{ book.id }}
+                            {{ reader.personalId }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ reader.name }} {{ reader.lastName }}
                         </div>
                         <div class="col-sm-3">
-                            {{ book.title }}
-                        </div>
-                        <div class="col-sm-1">
-                            {{ book.year|date("Y") }}
+                            {{ reader.email }}
                         </div>
                         <div class="col-sm-2">
-                            {{ book.fkAuthor.name }} {{ book.fkAuthor.lastName }}
-                        </div>
-                        <div class="col-sm-2">
-                            {{ book.fkGenre.genre }}
-                        </div>
-                        <div class="col-sm-1">
-                            {{ book.fkLanguage.language }}
+                            {{ reader.phoneNumber }}
                         </div>
                         <div class="col-md-2">
-                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-download-alt"></span></a>
-                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-star"></span></a>
+
+                             {% if reader.Fosuser.enabled == 1 %}
+                                 <a href="{{ path("readers-admin_reader-edit", {"readerId" : reader.personalId}) }}" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" class="btn btn-xs btn-default edit-reader"><span class="glyphicon glyphicon-pencil"></span></a>
+                                 <a href="#" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" class="btn btn-xs btn-default delete-reader"><span class="glyphicon glyphicon-trash"></span></a>
+                             {% else %}
+                                 <div style="color:red;"> Vartotojas pašalintas</div>
+                             {% endif %}
+
                         </div>
                     </div>
                 </div>

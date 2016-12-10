@@ -1,22 +1,22 @@
 <?php
 
-namespace AppBundle\Controller\ReadersSystem;
+namespace AppBundle\Controller\ReadersAdminSystem;
 
-use AppBundle\Form\Type\ReaderRegistration_NoFosType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\Type\ReaderRegistration_NoFosType;
 
-class ReaderController extends Controller
+class ReadersAdminController extends Controller
 {
 
     /**
-     * @Route("/reader/books-list/{page}", name="readers_books-list")
+     * @Route("/readers-admin/readers-list/{page}", name="readers-admin_readers-list")
      */
     public function booksListAction($page = 1)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $books = $em->getRepository("AppBundle:Books")->findAllBooks(true);
+        $books = $em->getRepository("AppBundle:Readers")->findAllReaders(true);
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -25,22 +25,26 @@ class ReaderController extends Controller
             10/*limit per page*/
         );
 
-        return $this->render('default/ROLE_reader/index.html.twig', [
+        return $this->render('default/ROLE_readers_admin/index.html.twig', [
             "pagination" => $pagination
         ]);
     }
+
     /**
-     * @Route("/reader/profile", name="readers_edit-profile")
+     * @Route("/readers-admin/reader-edit/{readerId}", name="readers-admin_reader-edit")
      */
-    public function editProfileAction(Request $request)
+    public function editReaderAction(Request $request, $readerId = null)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        if($readerId === null || !ctype_digit($readerId))
+            return $this->redirectToRoute("readers-admin_readers-list");
 
-        $reader = $em->getRepository("AppBundle:Readers")->findReaderByFosUser($user->getId());
+        $reader = $em->getRepository("AppBundle:Readers")->findReader($readerId);
+
 
         if(empty($reader))
             return $this->redirectToRoute("readers-admin_readers-list");
+
 
         $form = $this->createForm(ReaderRegistration_NoFosType::class, $reader, array(
             'method' => 'POST',
@@ -65,7 +69,7 @@ class ReaderController extends Controller
             return $this->redirectToRoute('readers-admin_readers-list');
         }
 
-        return $this->render('default/ROLE_reader/profile-edit.html.twig', [
+        return $this->render('default/ROLE_readers_admin/reader-edit.html.twig', [
             "reader" => $reader,
             "form" => $form->createView()
         ]);

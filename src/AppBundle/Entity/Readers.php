@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Readers
  *
  * @ORM\Table(name="readers", indexes={@ORM\Index(name="fkc_reader_to_fosuser", columns={"fk_fosuser"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReadersRepository")
  */
 class Readers
 {
