@@ -43,6 +43,15 @@
                             <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         </div>
                     {% endif %}
+
+                    {% if app.session.flashBag.has('success') %}
+                        <div class="alert alert-success text-center">
+                            {% for msg in app.session.flashBag.get('success') %}
+                                {{ msg }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     <p class="message">Neturi skaitytojo paskyros? <a href="#">Registracija</a></p>
                     <input type="submit" id="_submit" name="_submit" value="Prisijungti"/>
                 </form>

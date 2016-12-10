@@ -47,7 +47,6 @@ class LoginController extends Controller
             : null;
 
 
-        // replace this example code with whatever you need
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
 
@@ -71,7 +70,7 @@ class LoginController extends Controller
 
             $form->getData();
             $user->setRoles(["ROLE_READER"]);
-            $user->setEmail(true);
+            $user->setEnabled(true);
 
             $userManager->updateUser($user);
 
@@ -82,7 +81,7 @@ class LoginController extends Controller
 
             $request->getSession()->getFlashBag()->add(
                 'success',
-                'Sėkmingai prisiregistravote, galite prisijungti'
+                'Sėkmingai prisiregistravote, galite prisijungti.'
             );
             return $this->redirectToRoute('login');
         } else {
