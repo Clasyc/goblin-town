@@ -10,6 +10,7 @@ use FOS\UserBundle\Event\FormEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Listener responsible to change the redirection at the end of the password resetting
@@ -18,9 +19,10 @@ class ChangePasswordListener implements EventSubscriberInterface
 {
     private $router;
 
-    public function __construct(UrlGeneratorInterface $router)
+    public function __construct(UrlGeneratorInterface $router, AuthorizationChecker $authorizationChecker)
     {
         $this->router = $router;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -36,7 +38,12 @@ class ChangePasswordListener implements EventSubscriberInterface
     public function onChangePasswordSuccess(FormEvent $event)
     {
 
-        $url = $this->router->generate('readers_books-list');
+        if ($this->authorizationChecker->isGranted('ROLE_READER')) {
+            $url = $this->router->generate('readers_books-list');
+        }else if ($this->authorizationChecker->isGranted('ROLE_READERS_ADMIN')) {
+            $url = $this->router->generate('readers-admin_readers-list');
+        }
+
 
         $event->setResponse(new RedirectResponse($url));
     }

@@ -9,6 +9,6 @@ services:
         arguments:  ['@router', '@security.authorization_checker']
     app_user.password_change:
             class: AppBundle\EventListener\ChangePasswordListener
-            arguments: ['@router']
+            arguments: ['@router', '@security.authorization_checker']
             tags:
                 - { name: kernel.event_subscriber }
