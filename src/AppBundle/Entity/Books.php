@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Books
  *
  * @ORM\Table(name="books", indexes={@ORM\Index(name="fkc_book_to_language_idx", columns={"fk_language"}), @ORM\Index(name="fkc_book_to_genre_idx", columns={"fk_genre"}), @ORM\Index(name="fkc_author_idx", columns={"fk_author"}), @ORM\Index(name="fkc_book_to_books_admin_idx", columns={"fk_books_admin"}), @ORM\Index(name="fkc_book_to_publisher_idx", columns={"fk_publisher"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\BooksRepository")
  */
 class Books
 {

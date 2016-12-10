@@ -8,14 +8,24 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ReaderController extends Controller
 {
+
     /**
-     * @Route("/reader", name="reader-index")
+     * @Route("/reader/books-list/{page}", name="readers_books-list")
      */
-    public function indexAction(Request $request)
+    public function booksListAction($page = 1)
     {
-        // replace this example code with whatever you need
+        $em = $this->getDoctrine()->getEntityManager();
+        $books = $em->getRepository("AppBundle:Books")->findAllBooks(true);
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $books, /* query NOT result */
+            $page/*page number*/,
+            10/*limit per page*/
+        );
+
         return $this->render('default/ROLE_reader/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            "pagination" => $pagination
         ]);
     }
 }

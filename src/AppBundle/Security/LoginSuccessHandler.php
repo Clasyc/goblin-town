@@ -31,7 +31,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
         $response = null;
 
         if ($this->authorizationChecker->isGranted('ROLE_READER')) {
-            $response = new RedirectResponse($this->router->generate('reader-index'));
+            $response = new RedirectResponse($this->router->generate('readers_books-list'));
         }
 
         return $response;
