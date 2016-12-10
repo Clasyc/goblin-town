@@ -1,0 +1,40 @@
+<div class="form-registration">
+    <div class="login-title">
+        <span class="glyphicon glyphicon-user"></span> REGISTRACIJA
+    </div>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form.name, { 'attr': {'placeholder': 'vardas'} }) }}
+    {{ form_errors(form.name) }}
+    {{ form_widget(form.lastName, { 'attr': {'placeholder': 'pavardė'} }) }}
+    {{ form_errors(form.lastName) }}
+    {{ form_widget(form.email, { 'attr': {'placeholder': 'el.paštas'} }) }}
+    {{ form_errors(form.email) }}
+    {{ form_widget(form.phoneNumber, { 'attr': {'placeholder': 'telefono numeris'} }) }}
+    {{ form_errors(form.phoneNumber) }}
+    {{ form_widget(form.city, { 'attr': {'placeholder': 'miestas'} }) }}
+    {{ form_errors(form.city) }}
+    {{ form_widget(form.adress, { 'attr': {'placeholder': 'adresas'} }) }}
+    {{ form_errors(form.adress) }}
+
+    <hr>
+    <br>
+    {{ form_widget(form.fosuser.username, { 'attr': {'placeholder': 'prisijungimo vardas'} }) }}
+    {{ form_errors(form.fosuser.username) }}
+    {% set first = false %}
+    {% for passwordField in form.fosuser.plainPassword %}
+        {% if first == false %}
+            {{ form_widget(passwordField, { 'attr': {'placeholder': 'slaptažodis'} }) }}
+            {{ form_errors(passwordField) }}
+        {% else %}
+            {{ form_widget(passwordField, { 'attr': {'placeholder': 'pakartokie slaptažodį'} }) }}
+            {{ form_errors(passwordField) }}
+        {% endif %}
+        {% set first = true %}
+    {% endfor %}
+    
+    <div>
+        <button type="submit" class="btn btn-primary" formnovalidate>Registruotis</button>
+    </div>
+    {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

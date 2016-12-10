@@ -1,0 +1,61 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Authors
+ *
+ * @ORM\Table(name="authors")
+ * @ORM\Entity
+ */
+class Authors
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=35, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=50, nullable=false)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nationality", type="string", length=30, nullable=false)
+     */
+    private $nationality;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="birth_date", type="date", nullable=false)
+     */
+    private $birthDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="death_date", type="date", nullable=true)
+     */
+    private $deathDate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

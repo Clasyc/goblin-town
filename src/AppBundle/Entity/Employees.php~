@@ -1,0 +1,85 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Employees
+ *
+ * @ORM\Table(name="employees", indexes={@ORM\Index(name="fkc_employee_to_fosuser", columns={"fk_fosuser"})})
+ * @ORM\Entity
+ */
+class Employees
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=40, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=40, nullable=false)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=50, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone_number", type="string", length=30, nullable=false)
+     */
+    private $phoneNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="residence", type="string", length=100, nullable=false)
+     */
+    private $residence;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="birth_date", type="date", nullable=false)
+     */
+    private $birthDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="works_since", type="date", nullable=false)
+     */
+    private $worksSince;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="table_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $tableId;
+
+    /**
+     * @var \AppBundle\Entity\FosUser
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\FosUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_fosuser", referencedColumnName="id")
+     * })
+     */
+    private $fkFosuser;
+
+
+}
+

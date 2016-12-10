@@ -1,0 +1,78 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Readers
+ *
+ * @ORM\Table(name="readers", indexes={@ORM\Index(name="fkc_reader_to_fosuser", columns={"fk_fosuser"})})
+ * @ORM\Entity
+ */
+class Readers
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=40, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=50, nullable=false)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="phone_number", type="integer", nullable=false)
+     */
+    private $phoneNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city", type="string", length=35, nullable=false)
+     */
+    private $city;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adress", type="string", length=255, nullable=false)
+     */
+    private $adress;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="personal_id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $personalId;
+
+    /**
+     * @var \AppBundle\Entity\FosUser
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\FosUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_fosuser", referencedColumnName="id")
+     * })
+     */
+    private $fkFosuser;
+
+
+}
+

@@ -1,0 +1,57 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * BooksAdmins
+ *
+ * @ORM\Table(name="books_admins", indexes={@ORM\Index(name="fkc_books_admin_to_fosuser", columns={"fk_fosuser"})})
+ * @ORM\Entity
+ */
+class BooksAdmins
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=35, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=50, nullable=false)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\FosUser
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\FosUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_fosuser", referencedColumnName="id")
+     * })
+     */
+    private $fkFosuser;
+
+
+}
+

@@ -1,0 +1,58 @@
+{% extends 'login_base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/login/login.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    '@AppBundle/Resources/public/js/login/login.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+    <div class="login-page">
+        <div class="form">
+            <div class="form-login">
+                <div class="login-title">
+                    <span class="glyphicon glyphicon-book"></span> BIBLIOTEKA
+                </div>
+
+                {% trans_default_domain 'FOSUserBundle' %}
+
+
+                <form action="{{ path("fos_user_security_check") }}" class="login-form" method="post">
+                    {% if csrf_token %}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                    {% endif %}
+
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required"
+                           placeholder="prisijungimo vardas"/>
+                    <input type="password" id="password" name="_password" required="required"
+                           placeholder="slaptažodis"/>
+
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        </div>
+                    {% endif %}
+                    <p class="message">Neturi skaitytojo paskyros? <a href="#">Registracija</a></p>
+                    <input type="submit" id="_submit" name="_submit" value="Prisijungti"/>
+                </form>
+            </div>
+            {% include 'default/register.html.twig' %}
+        </div>
+
+
+    </div>
+{% endblock %}
+
+
+

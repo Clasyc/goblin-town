@@ -1,0 +1,74 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Reservations
+ *
+ * @ORM\Table(name="reservations", indexes={@ORM\Index(name="fkc_reservation_to_reader_idx", columns={"fk_reader"}), @ORM\Index(name="fkc_reservation_to_book_idx", columns={"fk_book"})})
+ * @ORM\Entity
+ */
+class Reservations
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="queue", type="integer", nullable=false)
+     */
+    private $queue;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="queue_moved", type="datetime", nullable=false)
+     */
+    private $queueMoved;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=20, nullable=false)
+     */
+    private $status;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Readers
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Readers")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_reader", referencedColumnName="personal_id")
+     * })
+     */
+    private $fkReader;
+
+    /**
+     * @var \AppBundle\Entity\Books
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Books")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_book", referencedColumnName="id")
+     * })
+     */
+    private $fkBook;
+
+
+}
+

@@ -1,0 +1,53 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Wishlists
+ *
+ * @ORM\Table(name="wishlists", indexes={@ORM\Index(name="fkc_wishlist_to_reader_idx", columns={"fk_reader"}), @ORM\Index(name="fkc_wishlist_to_book_idx", columns={"fk_book"})})
+ * @ORM\Entity
+ */
+class Wishlists
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="addition_date", type="datetime", nullable=false)
+     */
+    private $additionDate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Readers
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Readers")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_reader", referencedColumnName="personal_id")
+     * })
+     */
+    private $fkReader;
+
+    /**
+     * @var \AppBundle\Entity\Books
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Books")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_book", referencedColumnName="id")
+     * })
+     */
+    private $fkBook;
+
+
+}
+
