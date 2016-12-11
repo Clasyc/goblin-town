@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Books
 {
+
+    public function __construct()
+    {
+        $this->wishlists = new \Doctrine\Common\Collections\ArrayCollection();
+    }
     /**
      * @var string
      *
@@ -105,6 +110,46 @@ class Books
      * })
      */
     private $fkAuthor;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Wishlists", mappedBy="fkBook", cascade={"remove"})
+     */
+    private $wishlists;
+
+    private $marked = false;
+
+    /**
+     * @return boolean
+     */
+    public function isMarked()
+    {
+        return $this->marked;
+    }
+
+    /**
+     * @param boolean $marked
+     */
+    public function setMarked($marked)
+    {
+        $this->marked = $marked;
+    }
+
+    public function setWishlists($wish)
+    {
+        if (!$this->wishlists->contains($wish)) {
+            $this->wishlists->add($wish);
+        }
+        return $this;
+    }
+
+    /**
+     *  @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getWishlists()
+    {
+        return $this->wishlists;
+    }
 
 
 

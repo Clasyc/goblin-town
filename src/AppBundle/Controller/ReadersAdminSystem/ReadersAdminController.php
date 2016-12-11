@@ -31,7 +31,7 @@ class ReadersAdminController extends Controller
     }
 
     /**
-     * @Route("/readers-admin/reader-edit/{readerId}", name="readers-admin_reader-edit")
+     * @Route("/readers-admin/reader/edit/{readerId}", name="readers-admin_reader-edit")
      */
     public function editReaderAction(Request $request, $readerId = null)
     {

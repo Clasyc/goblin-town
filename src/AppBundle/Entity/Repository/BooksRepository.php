@@ -28,4 +28,16 @@ class BooksRepository extends  EntityRepository
         }
 
     }
+
+    public function findBooksInWishlist($userId, $query = false){
+        $result = $this->getEntityManager()
+            ->createQuery(
+                'SELECT b, w, u FROM AppBundle:Books b LEFT JOIN b.wishlists w LEFT JOIN w.fkReader u WHERE u.personalId = :userId'
+            )->setParameter("userId", $userId);
+        if(!$query){
+            return  $result->getResult();
+        }else{
+            return  $result;
+        }
+    }
 }
