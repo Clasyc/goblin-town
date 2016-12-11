@@ -28,11 +28,14 @@ class BooksController extends Controller
         if ($form->isSubmitted() && $form->isValid())
         {
             $takeConditions = $request->request->get("order-book-condition");
-            $takeDate = (new \DateTime())->format('Y-m-d');
-            $agreedReturnDate = date_add(\DateTime::createFromFormat('Y-m-d', $takeDate),
+            $takeDate = (new \DateTime());
+            $agreedReturnDate = date_add(\DateTime::createFromFormat('Y-m-d', $takeDate->format('Y-m-d')),
                                         date_interval_create_from_date_string($takeConditions));
             $status = Orders::WAITING;
             $debtRatePerDay = 0.03;
+            $reader = $this->getDoctrine()
+                    ->getRepository('AppBundle:Readers')
+                    ->find($this->getReaderId());
 
             $order->setTakeDate($takeDate);
             $order->setAgreedReturnDate($agreedReturnDate);
@@ -40,9 +43,42 @@ class BooksController extends Controller
             $order->setStatus($status);
             $order->setDeptRatePerDay($debtRatePerDay);
             $order->setFkBook($book);
+            $order->setFkReader($reader);
+
+            if ($book->getOrdered() != true)
+            {
+                $book->setOrdered(true);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($order);
+                $em->persist($book);
+                $em->flush();
+
+                $this->addFlash(
+                    'success',
+                    'Knyga užsakyta!'
+                );
+            }
+            else
+            {
+                $this->addFlash(
+                    'error',
+                    'Knyga buvo užsakyta kito skaitytojo!'
+                );
+            }
         }
 
-        return $this->render('default/ROLE_reader/book-order.html.twig', array('book' => $book, 'form' => $form->createView()));
+        if ($book->getOrdered() != true)
+        {
+            return $this->render('default/ROLE_reader/book-order.html.twig', array('book' => $book, 'form' => $form->createView()));
+        }
+        else
+        {
+            $this->addFlash(
+                'error',
+                'Knyga, kurią bandota pasiekti yra užsakyta!'
+            );
+            return $this->redirectToRoute("readers_books-list");
+        }
     }
 
     /**
@@ -51,5 +87,13 @@ class BooksController extends Controller
     public function reserveBookAction($id)
     {
         return $this->render('default/ROLE_reader/book-reservation.html.twig', array('id' => $id));
+    }
+
+    private function getReaderId(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $reader = $em->getRepository("AppBundle:Readers")->findReaderByFosUser($user->getId());
+
+        return $reader->getPersonalId();
     }
 }

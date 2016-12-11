@@ -15,6 +15,16 @@
                 <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; UŽSAKYMAS </br>
             </div>
         </div>
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="alert alert-danger">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
         <div class="panel-body">
             <div class="row" style="margin:5px;">
                 <div class="col-sm-2">

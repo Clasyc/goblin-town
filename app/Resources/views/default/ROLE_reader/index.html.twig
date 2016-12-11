@@ -25,6 +25,11 @@
 
 {% block body %}
     <div class="panel panel-library">
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="alert alert-danger">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
         <div class="panel-heading">
             <div class="row">
                     <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; KNYGOS
