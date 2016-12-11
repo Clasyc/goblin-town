@@ -9,6 +9,75 @@
 {% endblock %}
 
 {% block body %}
-    <p>Užsakymas</p>
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; UŽSAKYMAS </br>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin:5px;">
+                <div class="col-sm-2">
+                    Pavadinimas
+                </div>
+                <div class="col-sm-1">
+                    Metai
+                </div>
+                <div class="col-sm-1">
+                    Puslapiai
+                </div>
+                <div class="col-sm-2">
+                    Leidėjas
+                </div>
+                <div class="col-sm-2">
+                    Autorius
+                </div>
+                <div class="col-sm-2">
+                    Žanras
+                </div>
+                <div class="col-sm-1">
+                    Kalba
+                </div>
+            </div>
+            <div class="book-list-element">
+                <div class="row" style="margin:5px;">
+                    <div class="col-sm-2">
+                        {{ book.title }}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ book.year|date("Y") }}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ book.pageCount }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ book.fkPublisher.name }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ book.fkAuthor.name }} {{ book.fkAuthor.lastName }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ book.fkGenre.genre }}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ book.fkLanguage.language }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        {{ form_start(form) }}
+            <div class="form-group row">
+                <label class="col-sm-2" for="order-book">Užsakymo sąlygos:</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="order-book-condition">
+                        <option value="1 month">Mėnesiui</option>
+                        <option value="1 week">Savaitei</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Užsakyti</button>
+        {{ form_end(form) }}
+    </div>
 
 {% endblock %}
