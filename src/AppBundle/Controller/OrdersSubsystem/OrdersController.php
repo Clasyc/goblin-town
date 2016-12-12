@@ -78,7 +78,8 @@ class OrdersController extends Controller
         return $this->redirectToRoute("readers_books-list");
     }
 
-    private function getReaderId(){
+    private function getReaderId()
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $reader = $em->getRepository("AppBundle:Readers")->findReaderByFosUser($user->getId());

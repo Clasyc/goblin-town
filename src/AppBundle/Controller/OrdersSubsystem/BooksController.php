@@ -35,10 +35,23 @@ class BooksController extends Controller
     }
 
     /**
-     * @Route("/reader/reserve-book/{id}", name="orders_reserve-book")
+     * @Route("/reader/reserve-book/{id}", name="orders_create-reservation-form")
      */
-    public function reserveBookAction($id)
+    public function createReservationFormAction($id)
     {
-        return $this->render('default/ROLE_reader/book-reservation.html.twig', array('id' => $id));
+        $book = $this->getDoctrine()
+            ->getRepository('AppBundle:Books')
+            ->find($id);
+
+        $queue = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('AppBundle:Reservations')
+            ->countQueueNumber($book->getId());
+
+        $csrfToken = $this->has('security.csrf.token_manager')
+            ? $this->get('security.csrf.token_manager')->refreshToken('reservation')->getValue()
+            : null;
+
+        return $this->render('default/ROLE_reader/book-reservation.html.twig', array('book' => $book, 'queue' => $queue[0][1], 'csrf_token' => $csrfToken));
     }
 }

@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Orders
 {
     const WAITING = "waiting";
-    const CONFIRMED = "confirmed";
+    const BORROWED = "borrowed";
     const REJECTED = "rejected";
     const DEBT = "debt";
     const RETURNED = "returned";
