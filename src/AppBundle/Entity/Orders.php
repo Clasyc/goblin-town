@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Orders
 {
+    const WAITING = "waiting";
+    const CONFIRMED = "confirmed";
+    const REJECTED = "rejected";
+    const DEBT = "debt";
+    const RETURNED = "returned";
     /**
      * @var \DateTime
      *
@@ -29,14 +34,14 @@ class Orders
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="actual_return_date", type="date", nullable=false)
+     * @ORM\Column(name="actual_return_date", type="date", nullable=true)
      */
     private $actualReturnDate;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="take_conditions", type="string", length=10, nullable=true)
+     * @ORM\Column(name="take_conditions", type="string", length=10, nullable=false)
      */
     private $takeConditions;
 
