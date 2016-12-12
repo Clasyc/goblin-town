@@ -2,6 +2,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/book-order.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
@@ -74,20 +79,25 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <hr>
-        {{ form_start(form) }}
-            <div class="form-group row">
-                <label class="col-sm-2" for="order-book">Užsakymo sąlygos:</label>
-                <div class="col-sm-3">
-                    <select class="form-control" name="order-book-condition">
-                        <option value="1 month">Mėnesiui</option>
-                        <option value="1 week">Savaitei</option>
-                    </select>
+            <hr>
+            <form action="{{ path('orders_order-book', {'id': book.id}) }}" name="orders_order-book" method="post">
+                {% if csrf_token %}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                {% endif %}
+                <div class="form-group row">
+                    <div class="condition-label col-sm-6">
+                        <label for="order-book">Užsakymo sąlygos:</label>
+                    </div>
+                    <div class="condition-select col-sm-3">
+                        <select class="form-control" name="order-book-condition">
+                            <option value="1 month">Mėnesiui</option>
+                            <option value="1 week">Savaitei</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Užsakyti</button>
-        {{ form_end(form) }}
+                <button type="submit" name="_submit" id="_submit" class="btn btn-primary">Užsakyti</button>
+            </form>
+        </div>
     </div>
 
 {% endblock %}

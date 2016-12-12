@@ -82,7 +82,7 @@
                         </div>
                         <div class="col-md-2">
                                 {% if book.ordered == false %}
-                                    <a href="{{ path('orders_order-book', {'id': book.id}) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-book"></span></a>
+                                    <a href="{{ path('orders_create-order-form', {'id': book.id}) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-book"></span></a>
                                 {% else %}
                                     <span><i>Užsakyta</i></span>
                                 {% endif %}
