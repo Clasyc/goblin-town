@@ -35,10 +35,60 @@ class BooksController extends Controller
     }
 
     /**
-     * @Route("/reader/reserve-book/{id}", name="orders_reserve-book")
+     * @Route("/reader/reserve-book/{id}", name="orders_create-reservation-form")
      */
-    public function reserveBookAction($id)
+    public function createReservationFormAction($id)
     {
-        return $this->render('default/ROLE_reader/book-reservation.html.twig', array('id' => $id));
+        $book = $this->getDoctrine()
+            ->getRepository('AppBundle:Books')
+            ->find($id);
+
+        if ($this->isBookRelatedWithReader($this->getReaderId(), $book->getId()))
+        {
+            $this->addFlash(
+                'error',
+                'Jau esate užsisakę arba rezervavę šią knygą.'
+            );
+            return $this->redirectToRoute("readers_books-list");
+        }
+        else
+        {
+            $queue = $this->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('AppBundle:Reservations')
+                ->countQueueNumber($book->getId());
+
+            $csrfToken = $this->has('security.csrf.token_manager')
+                ? $this->get('security.csrf.token_manager')->refreshToken('reservation')->getValue()
+                : null;
+
+            return $this->render('default/ROLE_reader/book-reservation.html.twig', array('book' => $book, 'queue' => $queue[0][1], 'csrf_token' => $csrfToken));
+        }
+    }
+
+
+    private function isBookRelatedWithReader($readerId, $bookId)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $orderValue = $em->getRepository("AppBundle:Readers")->isBookAlreadyOrderedByReader($readerId, $bookId);
+        $reservationValue = $em->getRepository("AppBundle:Readers")->isBookAlreadyReservedByReader($readerId, $bookId);
+
+        if ($orderValue || $reservationValue)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private function getReaderId()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $reader = $em->getRepository("AppBundle:Readers")->findReaderByFosUser($user->getId());
+
+        return $reader->getPersonalId();
     }
 }
