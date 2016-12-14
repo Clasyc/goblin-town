@@ -154,5 +154,12 @@ class ReaderController extends Controller
         ]);
     }
 
+    private function getReaderId(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $reader = $em->getRepository("AppBundle:Readers")->findReaderByFosUser($user->getId());
+
+        return $reader->getPersonalId();
+    }
 
 }
