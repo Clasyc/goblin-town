@@ -29,21 +29,17 @@ class BooksRepository extends  EntityRepository
 
     }
 
-    // @param $query - false: returns result as objects,
-    //                  true: returns result as SQL builder query
-    public function findBook($query = false, $bookId){
+    public function findBooksInWishlist($userId, $query = false){
         $result = $this->getEntityManager()
             ->createQuery(
-                "SELECT b, p, l, g, a FROM AppBundle:Books b
- LEFT JOIN b.fkPublisher p LEFT JOIN b.fkLanguage l
-  LEFT JOIN b.fkGenre g LEFT JOIN b.fkAuthor a WHERE b = :bookId"
-            )->setParameter("bookId", $bookId);
+                'SELECT b, w, u FROM AppBundle:Books b LEFT JOIN b.wishlists w LEFT JOIN w.fkReader u WHERE u.personalId = :userId'
+            )->setParameter("userId", $userId);
+
         if(!$query){
             return  $result->getResult();
         }else{
             return  $result;
         }
-
     }
 
     // @param $query - false: returns result as objects,
@@ -64,6 +60,5 @@ class BooksRepository extends  EntityRepository
         }else{
             return  $result;
         }
-
     }
 }

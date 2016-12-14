@@ -15,7 +15,9 @@ class Books
 
     public function __construct()
     {
+
         $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->wishlists = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -123,13 +125,54 @@ class Books
     {
         if (!$this->orders->contains($order)) {
             $this->orders->add($order);
+
+        }
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="Wishlists", mappedBy="fkBook", cascade={"remove"})
+     */
+    private $wishlists;
+
+    private $marked = false;
+
+    /**
+     * @return boolean
+     */
+    public function isMarked()
+    {
+        return $this->marked;
+    }
+
+    /**
+     * @param boolean $marked
+     */
+    public function setMarked($marked)
+    {
+        $this->marked = $marked;
+    }
+
+    public function setWishlists($wish)
+    {
+        if (!$this->wishlists->contains($wish)) {
+            $this->wishlists->add($wish);
         }
         return $this;
     }
 
+
     public function getOrders()
     {
         return $this->orders;
+    }
+
+
+    /**
+     *  @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getWishlists()
+    {
+        return $this->wishlists;
     }
 
 

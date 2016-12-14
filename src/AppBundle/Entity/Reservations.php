@@ -8,10 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
  * Reservations
  *
  * @ORM\Table(name="reservations", indexes={@ORM\Index(name="fkc_reservation_to_reader_idx", columns={"fk_reader"}), @ORM\Index(name="fkc_reservation_to_book_idx", columns={"fk_book"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReservationsRepository")
  */
 class Reservations
 {
+    const RESERVED = "reserved";
+    const CANCELLED = "cancelled";
+    const ORDERING = "ordering";
     /**
      * @var \DateTime
      *

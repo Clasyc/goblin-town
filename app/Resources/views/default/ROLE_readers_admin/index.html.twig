@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/books-list.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    '@AppBundle/Resources/public/js/readers-list/readers-list.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                    <span class="glyphicon glyphicon-user"></span> SKAITYTOJAI
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin:5px;">
+                <div class="col-sm-1">
+                    Nr.
+                </div>
+                <div class="col-sm-2">
+                    Skaitytojas
+                </div>
+                <div class="col-sm-3">
+                   El.paštas
+                </div>
+                <div class="col-sm-2">
+                    Telefonas
+                </div>
+                <div class="col-md-2">
+                    Veiksmai
+                </div>
+            </div>
+            {% for reader in pagination %}
+                <div class="book-list-element">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            {{ reader.personalId }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ reader.name }} {{ reader.lastName }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ reader.email }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ reader.phoneNumber }}
+                        </div>
+                        <div class="col-md-2">
+
+                             {% if reader.Fosuser.enabled == 1 %}
+                                 <a href="{{ path("readers-admin_reader-edit", {"readerId" : reader.personalId}) }}" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" class="btn btn-xs btn-default edit-reader"><span class="glyphicon glyphicon-pencil"></span></a>
+                                 <a href="#" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" class="btn btn-xs btn-default delete-reader"><span class="glyphicon glyphicon-trash"></span></a>
+                             {% else %}
+                                 <div style="color:red;"> Vartotojas pašalintas</div>
+                             {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+        <div class="panel-footer">
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
