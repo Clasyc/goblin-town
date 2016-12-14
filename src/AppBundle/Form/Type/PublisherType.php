@@ -25,9 +25,7 @@ class PublisherType extends AbstractType
             ->add('adress')
             ->add('city')
             ->add('postCode')
-            ->add('phone')
-            ->add('save', SubmitType::class)
-        ;
+            ->add('phone');
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Books
 {
+
+    public function __construct()
+    {
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
     /**
      * @var string
      *
@@ -106,6 +112,25 @@ class Books
      */
     private $fkAuthor;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="Orders", mappedBy="fkBook", cascade={"persist"})
+     */
+    private $orders;
+
+
+    public function setOrders($order)
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+        }
+        return $this;
+    }
+
+    public function getOrders()
+    {
+        return $this->orders;
+    }
 
 
     /**

@@ -21,32 +21,13 @@
     <div class="panel panel-library">
         <div class="panel-heading">
             <div class="row">
-                <span class="glyphicon glyphicon-book"></span> KNYGOS APRAšYMAS
+                <span class="glyphicon glyphicon-book"></span> Redaguoti knygą
             </div>
         </div>
-        {% for book in books %}
-            <li class="list-group-item">ISBN: <strong>{{ book.isbnCode }}</strong></li>
-            <li class="list-group-item">Pavadinimas: <strong>{{ book.title }}</strong></li>
-            <li class="list-group-item">Autorius: <strong>{{ book.fkAuthor.name }}  {{ book.fkAuthor.lastname }}</strong></li>
-            <ul>
-                <li class="list-group-item">Tautybė: <strong>{{ book.fkAuthor.nationality }}</strong></li>
-                <li class="list-group-item">Gimimo data: <strong>{{ book.fkAuthor.birthDate |date('Y-m-d')}}</strong></li>
-                <li class="list-group-item">Mirties data: <strong>{{ book.fkAuthor.deathDate |date('Y-m-d')}}</strong></li>
-            </ul>
-            <li class="list-group-item">Žanras: <strong>{{ book.fkGenre.genre }}</strong></li>
-            <li class="list-group-item">Puslapių kiekis: <strong>{{ book.pageCount }}</strong></li>
-            <li class="list-group-item">Kalba: <strong>{{ book.fkLanguage.language }}</strong></li>
-            <li class="list-group-item">Leidykla: <strong>{{ book.fkPublisher.name }}</strong></li>
-            <ul>
-                <li class="list-group-item">Adresas: <strong>{{ book.fkPublisher.adress }}</strong></li>
-                <li class="list-group-item">Miestas: <strong>{{ book.fkPublisher.city }}</strong></li>
-                <li class="list-group-item">Pašto_kodas: <strong>{{ book.fkPublisher.postCode }}</strong></li>
-                <li class="list-group-item">Telefono Nr.: <strong>{{ book.fkPublisher.phone }}</strong></li>
-            </ul>
-
-        {% endfor %}
+        <div class="panel-body">
+            {{ form(form) }}
+        </div>
     </div>
-
 
 
 {% endblock %}

@@ -22,13 +22,12 @@ class AuthorType extends AbstractType
     {
 
         $builder
-            ->add('name')
-            ->add('lastname')
-            ->add('nationality')
-            ->add('birthDate', DateType::class)
-            ->add('deathDate', DateType::class)
-            ->add('save', SubmitType::class)
-        ;
+            ->add('name', null, array("label" => "Vardas"))
+            ->add('lastname', null, array("label" => "Pavarde"))
+            ->add('nationality', null, array("label" => "Tautybe"))
+            ->add('birthDate', null, array("label" => "Gimimo data"))
+            ->add('deathDate', null, array("label" => "Mirties data"));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

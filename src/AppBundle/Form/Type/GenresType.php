@@ -22,9 +22,7 @@ class GenresType extends AbstractType
     {
 
         $builder
-            ->add('genre')
-            ->add('save', SubmitType::class)
-        ;
+            ->add('genre');
     }
 
     public function configureOptions(OptionsResolver $resolver)

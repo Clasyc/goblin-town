@@ -22,9 +22,8 @@ class LanguageType extends AbstractType
     {
 
         $builder
-            ->add('language')
-            ->add('save', SubmitType::class)
-        ;
+            ->add('language');
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
