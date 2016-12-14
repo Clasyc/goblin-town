@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/books-list.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-book"></span> KNYGOS
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin:5px;">
+                <div class="col-sm-1">
+                    Nr.
+                </div>
+                <div class="col-sm-3">
+                    Pavadinimas
+                </div>
+                <div class="col-sm-1">
+                    Metai
+                </div>
+                <div class="col-sm-2">
+                    Autorius
+                </div>
+                <div class="col-sm-2">
+                    Žanras
+                </div>
+                <div class="col-sm-1">
+                    Kalba
+                </div>
+                <div class="col-md-2">
+                    Veiksmai
+                </div>
+            </div>
+            {% for book in pagination %}
+                <div class="book-list-element">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            {{ book.id }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ book.title }}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ book.year|date("Y") }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ book.fkAuthor.name }} {{ book.fkAuthor.lastName }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ book.fkGenre.genre }}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ book.fkLanguage.language }}
+                        </div>
+                        <div class="col-md-2">
+                            <a href={{ path('book_admins_book-edit', { 'bookId' : book.id } ) }} class="btn btn-xs btn-success">Redaguoti</a>
+                            <a href={{ path('book-delete', { 'bookId' : book.id } ) }} class="btn btn-xs btn-danger">Trinti</a>
+                            <a href={{ path('book_admins_books-view', { 'bookId' : book.id } ) }} class="btn btn-xs btn-info">Plačiau</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+        <div class="panel-footer">
+            <div style="text-align: right">
+                <a href={{ path('book_admins_book-add') }}  class="btn btn-xs btn-primary">Pridėti naują knygą</a>
+            </div>
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+
