@@ -6,6 +6,7 @@ use AppBundle\Form\Type\ReaderRegistration_NoFosType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ReaderController extends Controller
 {
@@ -160,6 +161,54 @@ class ReaderController extends Controller
         $reader = $em->getRepository("AppBundle:Readers")->findReaderByFosUser($user->getId());
 
         return $reader->getPersonalId();
+    }
+
+    /**
+     * @Route("/readers-admin/reader/check_delete", name="readers-admin_delete-check-reader")
+     */
+    public function ajaxCheckDeleteReaderAction(Request $request){
+        if ($request->isXmlHttpRequest()) {
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $readerId = $request->get("reader");
+            $orders_count = $em->getRepository("AppBundle:Orders")->findOrdersCount($readerId);
+
+
+            $response = new JsonResponse(array(
+                "orders_number" => $orders_count,
+                "url" => $this->generateUrl("readers-admin_readers-list")
+            ));
+            return $response;
+        }
+    }
+
+    /**
+     * @Route("/readers-admin/reader/delete", name="readers-admin_delete-reader")
+     */
+    public function ajaxDeleteReaderAction(Request $request){
+        if ($request->isXmlHttpRequest()) {
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $readerId = $request->get("reader");
+
+
+            $reader = $em->getRepository("AppBundle:Readers")->find($readerId);
+            $Fos_reader = $em->getRepository("AppBundle:Readers")->find($readerId)->getFosuser();
+
+
+            $Fos_reader->setEnabled(false);
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add(
+                'success',
+                'Skaitytojas '.$reader->getName()." ".$reader->getLastName()." sėkmingai pašalintas!"
+            );
+
+            $response = new JsonResponse(array(
+                "deleted" => true,
+            ));
+            return $response;
+        }
     }
 
 }

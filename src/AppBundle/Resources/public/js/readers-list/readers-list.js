@@ -19,7 +19,7 @@ $('a.delete-reader').confirm({
     content: 'Šalinti skaitytoją?',
     buttons: {
         Taip: function(){
-            location.href = this.$target.attr('href');
+            deleteCheckReader(this.$target.attr('data-reader'));
         },
         Ne: function(){
 

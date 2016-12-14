@@ -12,8 +12,13 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        var reader_check_delete_url = "{{ url('readers-admin_delete-check-reader') }}";
+        var reader_delete_url = "{{ url('readers-admin_delete-reader') }}";
+    </script>
     {% javascripts
     '@AppBundle/Resources/public/js/readers-list/readers-list.js'
+    '@AppBundle/Resources/public/js/readers-list/delete-reader.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -63,7 +68,7 @@
 
                              {% if reader.Fosuser.enabled == 1 %}
                                  <a href="{{ path("readers-admin_reader-edit", {"readerId" : reader.personalId}) }}" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" class="btn btn-xs btn-default edit-reader"><span class="glyphicon glyphicon-pencil"></span></a>
-                                 <a href="#" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" class="btn btn-xs btn-default delete-reader"><span class="glyphicon glyphicon-trash"></span></a>
+                                 <a href="#" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" data-reader="{{ reader.personalId }}" class="btn btn-xs btn-default delete-reader"><span class="glyphicon glyphicon-trash"></span></a>
                              {% else %}
                                  <div style="color:red;"> Vartotojas pašalintas</div>
                              {% endif %}
