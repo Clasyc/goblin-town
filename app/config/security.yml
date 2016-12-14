@@ -4,11 +4,7 @@ security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
 
-<<<<<<< HEAD
     role_hierarchy:
-
-=======
->>>>>>> books_merge-with-latest-changes
 
     providers:
         fos_userbundle:
