@@ -21,7 +21,7 @@ class ReadersRepository extends  EntityRepository
     public function findAllReaders($query = false){
         $result = $this->getEntityManager()
             ->createQuery(
-                'SELECT r, fos FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos'
+                'SELECT r, fos, p FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos LEFT JOIN r.penalty p'
             );
         if(!$query){
             return  $result->getResult();
@@ -34,7 +34,7 @@ class ReadersRepository extends  EntityRepository
     public function findReader($id){
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT r, fos FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos WHERE r.personalId = :id'
+                'SELECT r, fos, p FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos LEFT JOIN r.penalty p WHERE r.personalId = :id'
             )->setParameter("id", $id)
             ->getResult()[0];
     }

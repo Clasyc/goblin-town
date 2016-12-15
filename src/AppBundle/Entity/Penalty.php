@@ -3,39 +3,47 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Penalty
  *
  * @ORM\Table(name="penalty", indexes={@ORM\Index(name="fkc_penalty_to_readers_admin_idx", columns={"fk_readers_admin"}), @ORM\Index(name="fkc_penalty_to_reader_idx", columns={"fk_reader"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\PenaltyRepository")
  */
 class Penalty
 {
     /**
      * @var string
-     *
+     * @Assert\Length(
+     *      max = 50,
+     *      maxMessage = "Pavadinimas negali būti ilgesnis nei 50 simbolių"
+     * )
      * @ORM\Column(name="name", type="string", length=50, nullable=false)
      */
     private $name;
 
     /**
      * @var string
-     *
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Komentaras negali būti ilgesnis nei 255 simbolių"
+     * )
      * @ORM\Column(name="comment", type="string", length=255, nullable=false)
      */
     private $comment;
 
     /**
      * @var \DateTime
-     *
+     * @Assert\DateTime()
      * @ORM\Column(name="penalty_begin_date", type="datetime", nullable=false)
      */
     private $penaltyBeginDate;
 
     /**
      * @var \DateTime
-     *
+     * @Assert\DateTime()
+     * @Assert\GreaterThan("today")
      * @ORM\Column(name="penalty_end_date", type="datetime", nullable=false)
      */
     private $penaltyEndDate;

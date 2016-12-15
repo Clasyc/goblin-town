@@ -71,3 +71,15 @@ body {
     font-size: 14px;
     border-radius: 0px;
 }
+.loader{
+    height: 8em;
+    width: 8em;
+    top: 50%;
+    left: 50%;
+    margin-top: -4em;
+    margin-left: -4em;
+    z-index: 9999;
+    background-color: white;
+    position: fixed;
+    display:none;
+}
