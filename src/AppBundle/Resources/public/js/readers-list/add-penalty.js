@@ -2,6 +2,8 @@
 
 $('a.add-penalty').click(function(){
     checkForPenalty($(this).attr("data-reader"), $(this).attr("data-reader-name"), $(this));
+    console.log("TEST: ");
+    console.log($(this));
 });
 $('body').on('focus',".penalty-date", function(){
     $(this).datepicker({
@@ -24,6 +26,9 @@ function checkForPenalty(id, reader_name, obj) {
             }else if(response.status == "active"){
                 alert("active");
             }else if(response.status == "ok"){
+                var p_id = response.id;
+                var r_name = response.name;
+                console.log("KURVA"+p_id+" "+r_name);
                 $.confirm({
                     icon: 'glyphicon glyphicon-ban-circle',
                     title: "Pridėti nuobaudą",
@@ -38,7 +43,7 @@ function checkForPenalty(id, reader_name, obj) {
                             var date = this.$content.find('#penaltyDate').val();
                             var name = this.$content.find('#penaltyName').val();
                             var comment = this.$content.find('#penaltyComment').val();
-                            addPenalty(obj, id, date, name, comment, reader_name, response.penaltyId);
+                            addPenalty(obj, id, date, name, comment, r_name, p_id);
                         },
                         Atšaukti: function(){
 
@@ -59,6 +64,7 @@ function checkForPenalty(id, reader_name, obj) {
 }
 
 function addPenalty(obj, id, date, title, comment, reader_name, penalty_id){
+    console.log(id+" "+date+" "+title+" "+comment+" "+reader_name+" "+penalty_id);
     $(".loader").show();
     var typ = "delete";
     var data = {reader: id, type: typ, date: date, name: title, comment: comment};
@@ -76,14 +82,14 @@ function addPenalty(obj, id, date, title, comment, reader_name, penalty_id){
                     closeIcon: true
                 });
             }else if(response.status == "ok"){
-                changeReaderElement(obj, id, reader_name, date, title, comment, penalty_id);
+                changeReaderElement(obj, id, reader_name, response.date, title, comment, response.id);
                 $.confirm({
                     title: "Nuobauda pridėta!",
                     content: "Nuobauda sėkmingai pridėta skaitytojui "+response.name,
                     closeIcon: true
                 });
             }
-            console.log(response.status);
+            //console.log(response.status);
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
@@ -92,25 +98,29 @@ function addPenalty(obj, id, date, title, comment, reader_name, penalty_id){
 
 }
 function changeReaderElement(obj, reader, reader_name, penalty_date, penalty_name, penalty_comment, penalty_id){
-    console.log("OBJ: "+reader);
+    //console.log("OBJ: "+reader);
     var par = obj.parent();
     obj.parent().parent().parent().addClass("penalty");
-
+    if(penalty_name == undefined)
+        penalty_name = '';
+    if(penalty_comment == undefined)
+        penalty_comment = '';
     obj.remove();
-    par.append(''+
-        ' <a href="#" data-reader="'+reader+'" data-title="'+penalty_date+'" data-reader-name="'+reader_name+'" data-penalty-name="'+penalty_name+'" data-penalty-comment="'+penalty_comment+'" data-penalty-id="'+penalty_id+'" class="btn btn-xs btn-default penalty-info"><span class="glyphicon glyphicon-ban-circle"></span> Šalinti nuobaudą</a>')
-        .confirm({
+    var appended = par.append(''+
+        ' <a href="#" data-reader="'+reader+'" data-title="Informacija apie nuobaudą" data-reader-name="'+reader_name+'" data-penalty-date="'+penalty_date+'" data-penalty-name="'+penalty_name+'" data-penalty-comment="'+penalty_comment+'" data-penalty-id="'+penalty_id+'" class="btn btn-xs btn-default penalty-info"><span class="glyphicon glyphicon-ban-circle"></span> Šalinti nuobaudą</a>')
+        .unbind().confirm({
             icon: 'glyphicon glyphicon-info-sign',
-            onOpen: function(){
-                this.setContent('Skaitytojas: '+this.$target.attr('data-reader-name')+'<br>'+
-                    '<b>Nuobaudos data: '+this.$target.attr('data-penalty-date')+'<br></b>'+
-                    'Pavadinimas: '+this.$target.attr('data-penalty-name')+'<br>'+
-                    'Komentaras: '+this.$target.attr('data-penalty-comment'));
+            onOpenBefore: function(){
+                this.setContent('Skaitytojas: '+reader_name+'<br>'+
+                    '<b>Nuobaudos data: '+penalty_date+'<br></b>'+
+                    'Pavadinimas: '+penalty_name+'<br>'+
+                    'Komentaras: '+ penalty_comment);
+                this.setTitle('Informacija apie nuobaudą');
             },
             buttons:{
                 Šalinti: function(){
                     var tar = this.$target;
-                    deletePenalty(tar.attr('data-penalty-id'), tar, tar.attr("data-reader"));
+                    deletePenalty(penalty_id, appended.find("a.penalty-info"), reader);
                 },
                 Atšaukti: function(){
 

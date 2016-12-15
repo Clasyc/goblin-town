@@ -284,11 +284,13 @@ class ReaderController extends Controller
 
                 $em->persist($penalty);
                 $em->flush();
+                $penalty_id = $penalty->getId();
 
                 $response = new JsonResponse(array(
                     "name" => $reader->getName() . " " . $reader->getLastName(),
                     "status" => "ok",
-                    "penaltyId" => $penalty->getId(),
+                    "id" => $penalty_id,
+                    "date" => $penalty->getPenaltyBeginDate()->format('Y-m-d H:i:s')."-".$penalty->getPenaltyEndDate()->format("Y-m-d")
                 ));
 
             }
