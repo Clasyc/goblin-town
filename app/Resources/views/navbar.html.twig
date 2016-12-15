@@ -14,12 +14,20 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="{{ path('readers_books-list') }}">Knygos</a>
-                </li>
-                <li>
-                    <a href="{{ path('readers_wishlist') }}">Norų sąrašas</a>
-                </li>
+                {% if is_granted('ROLE_READERS_ADMIN') %}
+                    {#čia skaitytojo administratoriaus funkcijos#}
+                {% elseif is_granted('ROLE_READER') %}
+                    <li>
+                        <a href="{{ path('readers_books-list') }}">Knygos</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('readers_wishlist') }}">Norų sąrašas</a>
+                    </li>
+                {% elseif is_granted('ROLE_EMPLOYEE') %}
+                    {#čia darbuotojo funkcijos#}
+                {% elseif is_granted('ROLE_BOOK_ADMIN') %}
+                    {#čia knygų admin funkcijos#}
+                {% endif %}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
