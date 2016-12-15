@@ -1,10 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html.twig' %}
 
-</body>
-</html>
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/employees/orders-list.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    '@AppBundle/Resources/public/js/employees/orders-list.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-user"></span> UŽSAKYMAI (viso: {{ pagination.getTotalItemCount }})
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin:5px;">
+                <div class="col-sm-1">
+                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'o.id') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    <th>{{ knp_pagination_sortable(pagination, 'Skaitytojas', 'r.lastName') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    <th>{{ knp_pagination_sortable(pagination, 'Knyga', 'b.title') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    <th>{{ knp_pagination_sortable(pagination, 'Paėmimo data', 'o.takeDate') }}</th>
+                </div>
+                <div class="col-sm-1">
+                    <th>{{ knp_pagination_sortable(pagination, 'Išduota iki', 'o.agreedReturnDate') }}</th>
+                </div>
+                <div class="col-sm-1">
+                    <th>{{ knp_pagination_sortable(pagination, 'Kada grąžinta', 'o.actualReturnDate') }}</th>
+                </div>
+                <div class="col-sm-1">
+                    <th>{{ knp_pagination_sortable(pagination, 'Būsena', 'o.status') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    Veiksmai
+                </div>
+            </div>
+            {% for order in pagination %}
+                <div class="order-list-element">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            {{ order.id }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ order.fkReader.lastName }} {{ order.fkReader.name }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ order.fkBook.title }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ order.takeDate|date('Y-m-d') }}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ order.agreedReturnDate|date('Y-m-d') }}
+                        </div>
+                        <div class="col-sm-1">
+                            {% if order.actualReturnDate != null %}
+                                {{ order.actualReturnDate|date('Y-m-d') }}
+                            {% else %}
+                                negrąžinta
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ order.status }}
+                        </div>
+                        <div class="col-sm-2">
+                            {% if order.status == constant('AppBundle\\Entity\\Orders::WAITING') %}
+                                <a href="#" class="accept-order btn btn-xs btn-default"><span class="glyphicon glyphicon-book"></span></a>
+                                <a href="#" class="remove-order btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+                            {% elseif order.status == constant('AppBundle\\Entity\\Orders::BORROWED') %}
+                                <a href="#" class="confirm-order btn btn-xs btn-default"><span class="glyphicon glyphicon-ok"></span></a>
+                                <a href="#" class="debt-order btn btn-xs btn-default"><span class="glyphicon glyphicon-euro"></span></a>
+                            {% elseif order.status == constant('AppBundle\\Entity\\Orders::DEBT') %}
+                                {% set difference = date(order.actualReturnDate).diff(date(order.agreedReturnDate)) %}
+                                {% set days = difference.days %}
+                                skola {{ order.deptRatePerDay * days }} &euro;
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="panel-footer">
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

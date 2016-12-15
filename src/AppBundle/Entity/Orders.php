@@ -8,15 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
  * Orders
  *
  * @ORM\Table(name="orders", indexes={@ORM\Index(name="fkc_order_to_reader_idx", columns={"fk_reader"}), @ORM\Index(name="fkc_order_to_book_idx", columns={"fk_book"}), @ORM\Index(name="fkc_order_to_employe_idx", columns={"fk_employe"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\OrdersRepository")
  */
 class Orders
 {
-    const WAITING = "waiting";
-    const BORROWED = "borrowed";
-    const REJECTED = "rejected";
-    const DEBT = "debt";
-    const RETURNED = "returned";
+    const WAITING = "laukiama";
+    const BORROWED = "išduota";
+    const REJECTED = "atmesta";
+    const DEBT = "skola";
+    const RETURNED = "grąžinta";
     /**
      * @var \DateTime
      *

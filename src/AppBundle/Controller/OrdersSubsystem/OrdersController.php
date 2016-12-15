@@ -78,6 +78,9 @@ class OrdersController extends Controller
         return $this->redirectToRoute("readers_books-list");
     }
 
+    /**
+     * @Route("/employee/orders-list/{page}", name="orders_employee-orders-list")
+     */
     public function getAllOrdersList($page = 1)
     {
         $em = $this->getDoctrine()->getEntityManager();
