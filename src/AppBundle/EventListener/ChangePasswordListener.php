@@ -42,6 +42,8 @@ class ChangePasswordListener implements EventSubscriberInterface
             $url = $this->router->generate('readers_books-list');
         }else if ($this->authorizationChecker->isGranted('ROLE_READERS_ADMIN')) {
             $url = $this->router->generate('readers-admin_readers-list');
+        }else if ($this->authorizationChecker->isGranted('ROLE_EMPLOYEE')) {
+            $url = $this->router->generate('orders_employee-orders-list');
         }
 
 

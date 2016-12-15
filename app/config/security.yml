@@ -27,3 +27,4 @@ security:
              - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
              - { path: ^/readers-admin, role: ROLE_READERS_ADMIN }
              - { path: ^/reader, role: ROLE_READER }
+             - { path: ^/employee, role: ROLE_EMPLOYEE }
