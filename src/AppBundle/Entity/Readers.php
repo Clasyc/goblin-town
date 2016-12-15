@@ -13,6 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Readers
 {
+    public function __construct()
+    {
+        $this->penalty = new \Doctrine\Common\Collections\ArrayCollection();
+    }
     /**
      * @var string
      * @Assert\NotBlank(
@@ -122,7 +126,51 @@ class Readers
      */
     private $fkFosuser;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Penalty", mappedBy="fkReader", cascade={"persist"})
+     */
+    private $penalty;
 
+    public function hasActivePenalty(){
+        if(!empty($this->penalty)){
+            $today = new \DateTime();
+            foreach($this->penalty as $penalty){
+                if($penalty->getPenaltyBeginDate() < $today && $penalty->getPenaltyEndDate() > $today){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function getActivePenalty(){
+        if(!empty($this->penalty)){
+            $today = new \DateTime();
+            foreach($this->penalty as $penalty){
+                if($penalty->getPenaltyBeginDate() < $today && $penalty->getPenaltyEndDate() > $today){
+                    return $penalty;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public function setWPenalty($penalty)
+    {
+        if (!$this->penalty->contains($penalty)) {
+            $this->penalty->add($penalty);
+        }
+        return $this;
+    }
+
+    /**
+     *  @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPenalty()
+    {
+        return $this->penalty;
+    }
 
     /**
      * Set name

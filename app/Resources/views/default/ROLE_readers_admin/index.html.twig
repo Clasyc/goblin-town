@@ -15,10 +15,14 @@
     <script>
         var reader_check_delete_url = "{{ url('readers-admin_delete-check-reader') }}";
         var reader_delete_url = "{{ url('readers-admin_delete-reader') }}";
+        var reader_check_penalty_url = "{{ url('readers-admin_check-penalty-reader') }}";
+        var reader_delete_penalty_url = "{{ url('readers-admin_delete-penalty-reader') }}";
     </script>
     {% javascripts
     '@AppBundle/Resources/public/js/readers-list/readers-list.js'
     '@AppBundle/Resources/public/js/readers-list/delete-reader.js'
+    '@AppBundle/Resources/public/js/readers-list/add-penalty.js'
+    '@AppBundle/Resources/public/js/readers-list/delete-penalty.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -50,7 +54,7 @@
                 </div>
             </div>
             {% for reader in pagination %}
-                <div class="book-list-element">
+                <div class="book-list-element {% if reader.hasActivePenalty() == true %}penalty{% endif %}">
                     <div class="row">
                         <div class="col-sm-1">
                             {{ reader.personalId }}
@@ -64,11 +68,28 @@
                         <div class="col-sm-2">
                             {{ reader.phoneNumber }}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-4">
 
                              {% if reader.Fosuser.enabled == 1 %}
                                  <a href="{{ path("readers-admin_reader-edit", {"readerId" : reader.personalId}) }}" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" class="btn btn-xs btn-default edit-reader"><span class="glyphicon glyphicon-pencil"></span></a>
-                                 <a href="#" data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}" data-reader="{{ reader.personalId }}" class="btn btn-xs btn-default delete-reader"><span class="glyphicon glyphicon-trash"></span></a>
+                                 <a href="#"
+                                    data-reader-name="{{ reader.name }} {{ reader.lastName }}"
+                                    data-title="Skaitytojas {{ reader.name }} {{ reader.lastName }}"
+                                    data-reader="{{ reader.personalId }}" class="btn btn-xs btn-default delete-reader"><span class="glyphicon glyphicon-trash"></span></a>
+                                 {% if reader.hasActivePenalty() == true %}
+                                     <a href="#"
+                                        data-reader="{{ reader.personalId }}"
+                                        data-title="Informacija apie nuobaudą"
+                                        data-reader-name="{{ reader.name }} {{ reader.lastName }}"
+                                        data-penalty-date="{{ reader.getActivePenalty().penaltyBeginDate |date("Y-m-d H:m:i") }} - {{ reader.getActivePenalty().penaltyEndDate |date("Y-m-d") }}"
+                                        data-penalty-name="{{ reader.getActivePenalty().name }}"
+                                        data-penalty-comment="{{ reader.getActivePenalty().comment }}"
+                                        data-penalty-id="{{ reader.getActivePenalty().id }}"
+                                        class="btn btn-xs btn-default penalty-info"><span class="glyphicon glyphicon-ban-circle"></span> Šalinti nuobaudą</a>
+                                 {% else %}
+                                     <a href="#" data-title="Pridėti nuobaudą." data-reader="{{ reader.personalId }}" onclick= "return false;" class="btn btn-xs btn-default add-penalty"><span class="glyphicon glyphicon-ban-circle"></span> Pridėti nuobaudą</a>
+                                 {% endif %}
+
                              {% else %}
                                  <div style="color:red;"> Vartotojas pašalintas</div>
                              {% endif %}
