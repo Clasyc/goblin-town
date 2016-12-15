@@ -78,6 +78,23 @@ class OrdersController extends Controller
         return $this->redirectToRoute("readers_books-list");
     }
 
+    public function getAllOrdersList($page = 1)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $orders = $em->getRepository("AppBundle:Orders")->findAllOrders(true);
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $orders, /* query NOT result */
+            $page/*page number*/,
+            10/*limit per page*/
+        );
+
+        return $this->render('default/ROLE_employee/index.html.twig', [
+            "pagination" => $pagination
+        ]);
+    }
+
     private function getReaderId()
     {
         $em = $this->getDoctrine()->getEntityManager();
