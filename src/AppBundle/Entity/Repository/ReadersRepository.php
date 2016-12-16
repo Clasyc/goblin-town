@@ -40,11 +40,15 @@ class ReadersRepository extends  EntityRepository
     }
 
     public function findReaderByFosUser($id){
-        return $this->getEntityManager()
+        $result = $this->getEntityManager()
             ->createQuery(
                 'SELECT r, fos FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos WHERE fos.id = :id'
             )->setParameter("id", $id)
-            ->getResult()[0];
+            ->getResult();
+
+        if(!empty($result[0]))
+            return $result[0];
+        return null;
     }
 
     public function isBookAlreadyOrderedByReader($userId, $bookId)
