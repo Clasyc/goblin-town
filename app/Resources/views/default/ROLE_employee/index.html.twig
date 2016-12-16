@@ -23,10 +23,21 @@
     <div class="panel panel-library">
         <div class="panel-heading">
             <div class="row">
-                <span class="glyphicon glyphicon-user"></span> UŽSAKYMAI (viso: {{ pagination.getTotalItemCount }})
+                <span class="glyphicon glyphicon-user"></span> UŽSAKYMAI
             </div>
         </div>
         <div class="panel-body">
+            <br>
+            <form action="{{ path('orders_employee-orders-list') }}" name="orders_filter-orders" method="post">
+                     <div class="search-string-label col-sm-6">
+                        <label for="search-string">Paieška pagal knygą/skaitytoją</label>
+                    </div>
+                    <div class="search-string-input col-sm-3">
+                        <input type="text" name="search-string" />
+                    </div>
+                <input type="submit" style="visibility: hidden;" />
+            </form>
+            <br><br>
             <div class="row" style="margin:5px;">
                 <div class="col-sm-1">
                     <th>{{ knp_pagination_sortable(pagination, 'ID', 'o.id') }}</th>
