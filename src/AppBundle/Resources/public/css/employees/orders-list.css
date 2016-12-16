@@ -1,0 +1,19 @@
+.order-list-element{
+    position: relative;
+    float: left;
+    padding: 12px;
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    width: 100%;
+    margin: 5px;
+    font-size: 12px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.03), 0 5px 5px 0 rgba(0, 0, 0, 0.03);
+}
+
+.search-string-label label {
+    float: right;
+}
+
+.search-string-input {
+    display: block;
+    margin: auto;
+}

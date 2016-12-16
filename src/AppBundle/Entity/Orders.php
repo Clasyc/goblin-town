@@ -12,11 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Orders
 {
-    const WAITING = "waiting";
-    const BORROWED = "borrowed";
-    const REJECTED = "rejected";
-    const DEBT = "debt";
-    const RETURNED = "returned";
+    const WAITING = "laukiama";
+    const BORROWED = "išduota";
+    const REJECTED = "atmesta";
+    const DEBT = "skola";
+    const RETURNED = "grąžinta";
     /**
      * @var \DateTime
      *

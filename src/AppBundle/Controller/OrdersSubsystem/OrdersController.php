@@ -5,6 +5,7 @@ namespace AppBundle\Controller\OrdersSubsystem;
 use AppBundle\Entity\Orders;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class OrdersController extends Controller
@@ -76,6 +77,46 @@ class OrdersController extends Controller
             }
         }
         return $this->redirectToRoute("readers_books-list");
+    }
+
+    /**
+     * @Route("/employee/orders-list/{page}", name="orders_employee-orders-list")
+     */
+    public function getAllOrdersList(Request $request, $page = 1)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if (!$request->isMethod('POST'))
+        {
+            $orders = $em->getRepository("AppBundle:Orders")->findAllOrders(true);
+
+            $paginator  = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $orders, /* query NOT result */
+                $page/*page number*/,
+                10/*limit per page*/
+            );
+
+            return $this->render('default/ROLE_employee/index.html.twig', [
+                "pagination" => $pagination
+            ]);
+        }
+       else
+       {
+           $searchString = $request->request->get('search-string');
+           $filteredOrders = $em->getRepository("AppBundle:Orders")->findOrdersByBookReader($searchString, true);
+
+           $paginator  = $this->get('knp_paginator');
+           $pagination = $paginator->paginate(
+               $filteredOrders, /* query NOT result */
+               $page/*page number*/,
+               10/*limit per page*/
+           );
+
+           return $this->render('default/ROLE_employee/index.html.twig', [
+               "pagination" => $pagination
+           ]);
+       }
     }
 
     private function getReaderId()
