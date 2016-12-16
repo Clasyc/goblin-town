@@ -60,6 +60,7 @@ class LoginController extends Controller
         $form = $this->createForm(ReaderRegistrationType::class, $reader, array(
             'action' => $this->generateUrl("login"),
             'method' => 'POST',
+            'validation_groups' => array('Readers','profile', 'Fosuser'),
             'attr' => array('class' => 'login-form'),
         ));
 
@@ -88,16 +89,10 @@ class LoginController extends Controller
             $errors = $form->getErrors(true);
             if (!empty($errors)) {
                 $isError = false;
-
                 foreach ($errors as $error) {
-                    $request->getSession()->getFlashBag()->add(
-                        'error',
-                        $error->getMessage()
-                    );
                     $isError = true;
                 }
                 if($isError){
-
                     return $this->render('default/login_register_only.html.twig', [
                         'form' => $form->createView(),
                     ]);

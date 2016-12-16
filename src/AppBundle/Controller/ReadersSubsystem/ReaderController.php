@@ -65,7 +65,7 @@ class ReaderController extends Controller
 
         $form = $this->createForm(ReaderRegistration_NoFosType::class, $reader, array(
             'method' => 'POST',
-            'validation_groups' => array('Reader'),
+            'validation_groups' => array('profile'),
             'attr' => array('class' => 'col-sm-10 col-sm-offset-1')
         ));
 
@@ -130,16 +130,15 @@ class ReaderController extends Controller
 
         $form = $this->createForm(ReaderRegistration_NoFosType::class, $reader, array(
             'method' => 'POST',
-            'validation_groups' => array('Reader'),
+            'validation_groups' => array('profile'),
             'attr' => array('class' => 'col-sm-10 col-sm-offset-1')
         ));
 
         $form->handleRequest($request);
-        $reader->getFosuser()->setEmail($reader->getEmail());
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $form->getData();
+            $reader->getFosuser()->setEmail($reader->getEmail());
 
             $em->persist($reader);
             $em->flush();
@@ -149,6 +148,16 @@ class ReaderController extends Controller
                 'Skaitytojas ' . $reader->getName() . " " . $reader->getLastName() . " sėkmingai redaguotas!"
             );
             return $this->redirectToRoute('readers-admin_readers-list');
+        }else{
+            $errors = $form->getErrors(true);
+            if (!empty($errors)) {
+                foreach ($errors as $error) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        $error->getMessage()
+                    );
+                }
+            }
         }
 
         return $this->render('default/ROLE_readers_admin/reader-edit.html.twig', [
