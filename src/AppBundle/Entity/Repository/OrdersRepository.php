@@ -26,6 +26,27 @@ class OrdersRepository extends EntityRepository
         }
     }
 
+    public function findOrdersByReader($id, $query = false)
+    {
+        $result = $this->getEntityManager()
+            ->createQuery(
+                'SELECT o, r, e, b
+                 FROM AppBundle:Orders o 
+                 LEFT JOIN o.fkReader r 
+                 LEFT JOIN o.fkEmploye e 
+                 LEFT JOIN o.fkBook b
+                 WHERE r.personalId = :id ORDER BY o.takeDate'
+            )->setParameter("id", $id);
+        if(!$query)
+        {
+            return  $result->getResult();
+        }
+        else
+        {
+            return  $result;
+        }
+    }
+
     public function findOrdersCount($readerId){
         $result = $this->getEntityManager()
             ->createQuery(

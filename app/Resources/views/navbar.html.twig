@@ -23,6 +23,9 @@
                     <li>
                         <a href="{{ path('readers_wishlist') }}">Norų sąrašas</a>
                     </li>
+                    <li>
+                        <a href="{{ path('readers_history-list') }}">Užsakymų istorija</a>
+                    </li>
                 {% elseif is_granted('ROLE_EMPLOYEE') %}
                     {#čia darbuotojo funkcijos#}
                 {% elseif is_granted('ROLE_BOOK_ADMIN') %}
