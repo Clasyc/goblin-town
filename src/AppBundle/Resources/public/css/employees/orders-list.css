@@ -18,6 +18,14 @@
     margin: auto;
 }
 
-form.order-process {
+form.accept-order-form {
+    display: inline-block;
+}
+
+form.reject-order-form {
+    display: inline-block;
+}
+
+form.accept-return-form {
     display: inline-block;
 }
