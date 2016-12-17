@@ -17,3 +17,7 @@
     display: block;
     margin: auto;
 }
+
+form.order-process {
+    display: inline-block;
+}

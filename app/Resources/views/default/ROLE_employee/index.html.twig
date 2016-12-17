@@ -7,7 +7,6 @@
     %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
-
 {% endblock %}
 
 {% block javascripts %}
@@ -20,6 +19,16 @@
 {% endblock %}
 
 {% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert-success text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
     <div class="panel panel-library">
         <div class="panel-heading">
             <div class="row">
@@ -94,11 +103,27 @@
                         </div>
                         <div class="col-sm-2">
                             {% if order.status == constant('AppBundle\\Entity\\Orders::WAITING') %}
-                                <a href="#" class="accept-order btn btn-xs btn-default"><span class="glyphicon glyphicon-book"></span></a>
-                                <a href="#" class="remove-order btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+                                <form class="order-process" action="{{ path('orders_employee-process-order') }}" name="orders_process-order" method="post">
+                                    <input type="hidden" name="status" value="{{ constant('AppBundle\\Entity\\Orders::BORROWED') }}">
+                                    <input type="hidden" name="id" value="{{ order.id }}">
+                                    <input type="hidden" name="book" value="{{ order.fkBook.id }}">
+                                    <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></button>
+                                </form>
+                                <form class="order-process" action="{{ path('orders_employee-process-order') }}" name="orders_process-order" method="post">
+                                    <input type="hidden" name="status" value="{{ constant('AppBundle\\Entity\\Orders::REJECTED') }}">
+                                    <input type="hidden" name="id" value="{{ order.id }}">
+                                    <input type="hidden" name="book" value="{{ order.fkBook.id }}">
+                                    <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                </form>
                             {% elseif order.status == constant('AppBundle\\Entity\\Orders::BORROWED') %}
-                                <a href="#" class="confirm-order btn btn-xs btn-default"><span class="glyphicon glyphicon-ok"></span></a>
-                                <a href="#" class="debt-order btn btn-xs btn-default"><span class="glyphicon glyphicon-euro"></span></a>
+                                <form class="order-process" action="{{ path('orders_employee-process-return') }}" name="orders_process-order" method="post">
+                                    <input type="hidden" name="_return" value="confirm">
+                                    <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                                </form>
+                                <form class="order-process" action="{{ path('orders_employee-process-return') }}" name="orders_process-order" method="post">
+                                    <input type="hidden" name="_return" value="decline">
+                                    <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span></button>
+                                </form>
                             {% elseif order.status == constant('AppBundle\\Entity\\Orders::DEBT') %}
                                 {% set difference = date(order.actualReturnDate).diff(date(order.agreedReturnDate)) %}
                                 {% set days = difference.days %}

@@ -5,7 +5,6 @@ namespace AppBundle\Controller\OrdersSubsystem;
 use AppBundle\Entity\Orders;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class OrdersController extends Controller
@@ -80,7 +79,7 @@ class OrdersController extends Controller
     }
 
     /**
-     * @Route("/employee/orders-list/{page}", name="orders_employee-orders-list")
+     * @Route("/employee/orders-list/{page}", name="orders_employee-orders-list", requirements={"page": "\d+"})
      */
     public function getAllOrdersList(Request $request, $page = 1)
     {
@@ -117,6 +116,70 @@ class OrdersController extends Controller
                "pagination" => $pagination
            ]);
        }
+    }
+
+    /**
+     * @Route("/employee/orders-list/process", name="orders_employee-process-order")
+     */
+    public function processOrder(Request $request)
+    {
+        $order = $this->getDoctrine()
+            ->getRepository('AppBundle:Orders')
+            ->find($request->request->get('id'));
+
+        if ($request->isMethod('POST'))
+        {
+            $status = $request->request->get('status');
+
+            if ($status == Orders::BORROWED)
+            {
+                $order->setStatus($status);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($order);
+                $em->flush();
+
+                $this->addFlash(
+                    'info',
+                    'Užsakymas sėkmingai patvirtintas.'
+                );
+            }
+            else if ($status == Orders::REJECTED)
+            {
+                $book = $this->getDoctrine()
+                    ->getRepository('AppBundle:Books')
+                    ->find($request->request->get('book'));
+                $order->setStatus($status);
+                $book->setOrdered(false);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($order);
+                $em->persist($book);
+                $em->flush();
+
+                $this->addFlash(
+                    'info',
+                    'Užsakymas atmestas.'
+                );
+            }
+        }
+        else
+        {
+            $this->addFlash(
+                'error',
+                'Įvyko klaida.'
+            );
+        }
+
+        return $this->redirectToRoute("orders_employee-orders-list");
+    }
+
+    /**
+     * @Route("/employee/orders-list/return", name="orders_employee-process-return")
+     */
+    public function processReturn(Request $request)
+    {
+
     }
 
     private function getReaderId()
