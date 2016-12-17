@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/books-list.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    '@AppBundle/Resources/public/js/reports/report.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+
+{% block body %}
+<div class="panel panel-library">
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <div class="panel-heading">
+        <div class="row">
+            <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; POMĖGIŲ ATASKAITA
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="report-date">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="row">
+                        <form method="POST">
+                            <div class="col-sm-5">
+                                <input type="date" class="form-control" name="beginDate" id="beginDate">
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="date" class="form-control" name="endDate" id="endDate">
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="submit" name="submit" value="Rodyti ataskaitą" class="btn btn-primary">
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="report-body">
+            {% if bd is defined and ed is defined %}
+                <div class="row" style="margin-top:20px;">
+                    <div class="text-center">
+                        <b>Rodomas ataskaitos datos intervalas: {{ bd }} - {{ ed }}</b>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if categories is defined and languages is defined and total[0] is defined %}
+            <table class="table">
+                <tbody>
+                <tr class="active">
+                    <td>
+                        <b>Pasiimtų knygų skaičius pagal žanrus</b>
+                    </td>
+                    <td>vnt.</td>
+                    <td>proc.</td>
+                </tr>
+                {% for cat in categories %}
+                    <tr>
+                        <td><b>{{ cat[0].fkBook.fkgenre.genre }}</b></td>
+                        <td>{{ cat['cnt'] }}</td>
+                        <td>{{ ((cat['cnt']/total[0].cnt)*100)|round(1, 'floor') }}%</td>
+                    </tr>
+                {% endfor %}
+                    <tr class="active">
+                        <td><b>Pasiimtų knygų skaičius pagal kalbas</b></td>
+                        <td>vnt.</td>
+                        <td>proc.</td>
+                    </tr>
+                {% for lang in languages %}
+                    <tr>
+                        <td><b>{{ lang[0].fkBook.fkLanguage.language }}</b></td>
+                        <td>{{ lang['cnt'] }}</td>
+                        <td>{{ ((lang['cnt']/total[0].cnt)*100)|round(1, 'floor') }}%</td>
+                    </tr>
+                {% endfor %}
+                <tr class="info">
+                    <td><b>Iš viso pasiimtų knygų:</b> {{ total[0].cnt }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+

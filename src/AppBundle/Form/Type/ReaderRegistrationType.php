@@ -29,7 +29,6 @@ class ReaderRegistrationType extends AbstractType
             ->add('adress', null, array("label" => "Adresas"))
             ->add('fosuser', ProfileEditType::class, array(
                 "label" => false,
-                'error_bubbling' => false
                 ));
 
     }
@@ -38,6 +37,10 @@ class ReaderRegistrationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Readers',
+            'validation_groups' => array('Readers','profile', 'Fosuser'),
+            'error_mapping' => array(
+                '.' => 'fosuser.username',
+            ),
         ]);
     }
 }

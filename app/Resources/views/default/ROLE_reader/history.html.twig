@@ -1,0 +1,150 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/books-list.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+
+{% block body %}
+<div class="panel panel-library">
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <div class="panel-heading">
+        <div class="row">
+            <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; UŽSAKYMŲ ISTORIJA
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row" style="margin:5px;">
+            <div class="col-sm-1">
+                Nr.
+            </div>
+            <div class="col-sm-2">
+                Knyga
+            </div>
+            <div class="col-sm-2">
+                Pasiėmimo data
+            </div>
+            <div class="col-sm-2">
+                Gražinimo data
+            </div>
+            <div class="col-sm-2">
+                Laikotarpis
+            </div>
+            <div class="col-sm-1">
+                Statusas
+            </div>
+            <div class="col-md-2">
+                Delspinigiai
+            </div>
+        </div>
+
+        {% for order in pagination %}
+        {% if order.status == 'skola' %}
+        <div class="book-list-element element-red">
+            <div class="row">
+                <div class="col-sm-1">
+                    {{ order.id }}
+                </div>
+                <div class="col-sm-2">
+                    {{ order.fkBook.title }}
+                </div>
+                <div class="col-sm-2">
+                    {{ order.takeDate|date("Y-m-d") }}
+                </div>
+                <div class="col-sm-2">
+                    {% if order.actualReturnDate %} {{ order.actualReturnDate|date("Y-m-d") }} {% endif %}
+                </div>
+                <div class="col-sm-2">
+                    {{ order.takeConditions }}
+                </div>
+                <div class="col-sm-1">
+                    {{ order.status }}
+                </div>
+                <div class="col-md-2">
+                    {{ order.deptRatePerDay }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        {% for order in pagination %}
+            {% if order.status != 'skola' %}
+                <div class="book-list-element
+                    {% if order.status == 'išduota' %} element-green
+                    {% elseif order.status == 'atmesta' %} element-blue
+                    {% elseif order.status == 'grąžinta' %} element-grey
+                    {% endif %}
+                        ">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            {{ order.id }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ order.fkBook.title }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ order.takeDate|date("Y-m-d") }}
+                        </div>
+                        <div class="col-sm-2">
+                            {% if order.actualReturnDate %} {{ order.actualReturnDate|date("Y-m-d") }} {% endif %}
+
+                        </div>
+                        <div class="col-sm-2">
+                            {{ order.takeConditions }}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ order.status }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ order.deptRatePerDay }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+    <div class="panel-footer">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+</div>
+
+    <style>
+        .element-blue{
+            background-color: rgba(142, 180, 224, 0.32);
+        }
+        .element-green{
+            background-color: rgba(198, 224, 190, 0.31);
+        }
+        .element-grey{
+            background-color: rgba(224, 224, 224, 0.27);
+        }
+        .element-red{
+            background-color: rgba(231, 45, 0, 0.08);
+        }
+    </style>
+
+{% endblock %}
+
+
+

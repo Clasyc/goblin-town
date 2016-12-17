@@ -40,11 +40,15 @@ class ReadersRepository extends  EntityRepository
     }
 
     public function findReaderByFosUser($id){
-        return $this->getEntityManager()
+        $result = $this->getEntityManager()
             ->createQuery(
                 'SELECT r, fos FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos WHERE fos.id = :id'
             )->setParameter("id", $id)
-            ->getResult()[0];
+            ->getResult();
+
+        if(!empty($result[0]))
+            return $result[0];
+        return null;
     }
 
     public function isBookAlreadyOrderedByReader($userId, $bookId)
@@ -89,4 +93,19 @@ class ReadersRepository extends  EntityRepository
             return false;
         }
     }
+
+    public function findReadersRegistrationCountsForReport($beginDate, $endDate)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT r, partial f.{id, registrationDate}, COUNT(r) AS cnt
+                 FROM AppBundle:Readers r
+                 LEFT JOIN r.fkFosuser f
+                 WHERE f.registrationDate >= :beginDate AND f.registrationDate <= :endDate GROUP BY f.registrationDate ORDER BY f.registrationDate'
+            )
+            ->setParameter("beginDate", $beginDate)
+            ->setParameter("endDate", $endDate)
+            ->getResult();
+    }
+
 }

@@ -9,8 +9,8 @@
 namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
@@ -27,9 +27,9 @@ class ReaderRegistration_NoFosType extends AbstractType
             ->add('phoneNumber', null, array("label" => false))
             ->add('city', null, array("label" => false))
             ->add('adress', null, array("label" => false))
-            ->add('save', ButtonType::class, array(
+            ->add('save', SubmitType::class, array(
                 'label' => 'Redaguoti',
-                'attr' => array('class' => 'btn btn-primary', 'onclick' => '$(this).closest(\'form\').submit();'),
+                'attr' => array('class' => 'btn btn-primary'),
             ));
     }
 
@@ -37,6 +37,7 @@ class ReaderRegistration_NoFosType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Readers',
+            'validation_groups' => array('profile'),
         ]);
     }
 }
