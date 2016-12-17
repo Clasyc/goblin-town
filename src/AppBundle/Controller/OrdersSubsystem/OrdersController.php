@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\OrdersSubsystem;
 
+use AppBundle\Entity\Depts;
 use AppBundle\Entity\Orders;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -195,7 +196,63 @@ class OrdersController extends Controller
      */
     public function acceptBookReturnAction(Request $request)
     {
+        $order = $this->getDoctrine()
+            ->getRepository('AppBundle:Orders')
+            ->find($request->query->get('id'));
+        $book = $this->getDoctrine()
+            ->getRepository('AppBundle:Books')
+            ->find($order->getFkBook());
+        $actualReturnDate = (new \DateTime());
 
+        if ($request->isMethod('POST') && $this->isCsrfTokenValid('order', $request->request->get('_csrf_token')))
+        {
+            $em = $this->getDoctrine()->getManager();
+
+            if ($actualReturnDate > $order->getAgreedReturnDate())
+            {
+                $dateDifference = $actualReturnDate->diff($order->getAgreedReturnDate())->format("%a");
+                $debt = new Depts();
+                $debt->setStatus(Depts::UNPAID);
+                $debt->setDescription("Skola už pavėluotai grąžintą knygą.");
+                $debt->setFkOrder($order);
+                $debt->setPaymentDate($actualReturnDate);
+                $debt->setAmount($dateDifference * $order->getDeptRatePerDay());
+
+                $order->setStatus(Orders::DEBT);
+                $em->persist($debt);
+
+                $this->addFlash(
+                    'info',
+                    'Knyga grąžinta. Sudaryta skola už vėlavimą.'
+                );
+            }
+            else
+            {
+                $this->addFlash(
+                    'info',
+                    'Knyga grąžinta laiku.'
+                );
+                $order->setStatus(Orders::RETURNED);
+            }
+
+            $order->setActualReturnDate($actualReturnDate);
+            $book->setOrdered(false);
+            $this->getDoctrine()
+                ->getRepository('AppBundle:Reservations')
+                ->refreshReservations($book->getId());
+
+            $em->persist($order);
+            $em->persist($book);
+            $em->flush();
+        }
+        else
+        {
+            $this->addFlash(
+                'error',
+                'Įvyko klaida.'
+            );
+        }
+        return $this->redirectToRoute("orders_employee-orders-list");
     }
 
     private function getReaderId()

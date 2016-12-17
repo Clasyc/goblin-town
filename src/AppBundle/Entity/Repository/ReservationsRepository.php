@@ -27,4 +27,26 @@ class ReservationsRepository extends EntityRepository
             return  $result;
         }
     }
+
+    public function refreshReservations($bookId)
+    {
+        $ordering = Reservations::ORDERING;
+        $reserved = Reservations::RESERVED;
+
+        $this->getEntityManager()
+            ->createQuery(
+                'UPDATE AppBundle:Reservations r
+                 SET r.queue = r.queue - 1
+                 WHERE r.fkBook = :bookId AND r.status = :reserved'
+            )->setParameters(array('bookId' => $bookId, 'reserved' => $reserved))
+             ->execute();
+
+        $this->getEntityManager()
+            ->createQuery(
+                'UPDATE AppBundle:Reservations r
+                 SET r.status = :ordering
+                 WHERE r.queue = 0 AND r.fkBook = :bookId AND r.status = :reserved'
+            )->setParameters(array('bookId' => $bookId, 'reserved' => $reserved, 'ordering' => $ordering))
+            ->execute();
+    }
 }

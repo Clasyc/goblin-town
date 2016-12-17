@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Depts
 {
+    const PAID = "apmokėta";
+    const UNPAID = "neapmokėta";
+
     /**
      * @var string
      *
