@@ -81,7 +81,7 @@ class OrdersController extends Controller
     /**
      * @Route("/employee/orders-list/{page}", name="orders_employee-orders-list", requirements={"page": "\d+"})
      */
-    public function getAllOrdersList(Request $request, $page = 1)
+    public function getAllOrdersListAction(Request $request, $page = 1)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -121,7 +121,7 @@ class OrdersController extends Controller
     /**
      * @Route("/employee/orders-list/process", name="orders_employee-process-order")
      */
-    public function processOrder(Request $request)
+    public function processOrderAction(Request $request)
     {
         $order = $this->getDoctrine()
             ->getRepository('AppBundle:Orders')
@@ -175,9 +175,25 @@ class OrdersController extends Controller
     }
 
     /**
-     * @Route("/employee/orders-list/return", name="orders_employee-process-return")
+     * @Route("/employee/order/{id}", name="orders_employee-get-order")
      */
-    public function processReturn(Request $request)
+    public function getOrderFormAction($id)
+    {
+        $order = $this->getDoctrine()
+            ->getRepository('AppBundle:Orders')
+            ->find($id);
+
+        $csrfToken = $this->has('security.csrf.token_manager')
+            ? $this->get('security.csrf.token_manager')->refreshToken('order')->getValue()
+            : null;
+
+        return $this->render('default/ROLE_employee/order-info.html.twig', array('order' => $order, 'csrf_token' => $csrfToken));
+    }
+
+    /**
+     * @Route("/employee/accept-book-return", name="orders_employee-return-book")
+     */
+    public function acceptBookReturnAction(Request $request)
     {
 
     }

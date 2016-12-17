@@ -90,7 +90,7 @@
                                 {% else %}
                                     <a href="{{ path('orders_create-reservation-form', {'id': book.id}) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-asterisk"></span></a>
                                 {% endif %}
-                            <a href="#" class="btn btn-xs btn-default wishlist-toggle-btn" onclick="return false;" data-book="{{ book.id }}">
+                                    <a href="#" class="btn btn-xs btn-default wishlist-toggle-btn" onclick="return false;" data-book="{{ book.id }}">
                                 {% if book.marked == false %}
                                     <span class="glyphicon glyphicon-star-empty"></span>
                                 {% else %}
