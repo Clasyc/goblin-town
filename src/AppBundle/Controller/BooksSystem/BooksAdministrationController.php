@@ -13,12 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 class BooksAdministrationController extends Controller
 {
 
-
     /**
      * @Route("/booksAdmin/books/delete/{bookId}", name="book-delete")
      */
     public function deleteAction($bookId)
     {
+
         $em = $this->getDoctrine()->getEntityManager();
         $book = $em->getRepository("AppBundle:Books")->find($bookId);
 
@@ -33,16 +33,21 @@ class BooksAdministrationController extends Controller
         return $this->redirectToRoute('book_admins_books-list');
     }
 
+
     /**
      * @Route("/booksAdmin/books/add", name="book_admins_book-add")
      */
     public function addBookAction(Request $request)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        $admin = $em->getRepository("AppBundle:BooksAdmins")->findBooksAdminByFosUser($user->getId());
         $book = new Books();
 
-        $form = $this->createForm(BooksType::class, $book);
+        $form = $this->createForm(BooksType::class, $book, array(
+            "allow_extra_fields" => TRUE
+        ));
 
         $form->handleRequest($request);
 
@@ -52,6 +57,7 @@ class BooksAdministrationController extends Controller
             $form->getData();
             $em = $this->getDoctrine()->getEntityManager();
 
+            $book->setFkBooksAdmin($admin);
             $em->persist($book);
             $em->flush();
 
@@ -103,9 +109,7 @@ class BooksAdministrationController extends Controller
         $book = $em->getRepository('AppBundle:Books')->find($bookId);
 
         $form = $this->createForm(BooksType::class, $book, array(
-            'method' => 'POST',
-            'validation_groups' => array('Reader'),
-            'attr' => array('class' => 'col-sm-10 col-sm-offset-1')
+            'method' => 'POST'
         ));
 
         $form->handleRequest($request);

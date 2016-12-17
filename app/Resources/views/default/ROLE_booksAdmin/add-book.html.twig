@@ -24,10 +24,123 @@
                 <span class="glyphicon glyphicon-book"></span> Pridėti knygą
             </div>
         </div>
-        <div class="panel-body">
-           {{ form(form) }}
+        {{ form_start(form) }}
+        <div style="margin: 15px; margin-top: 30px; margin-left: 50px;" >
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.isbnCode, {'attr': {'placeholder': 'ISBN kodas'} }) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.title, {'attr': {'placeholder': 'Pavadinimas'} }) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.year) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.pageCount, {'attr': {'placeholder': 'Puslapių kiekis'} }) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.ordered) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.fkLanguage) }}
+                </div>
+            </div>
+            <p>
+                <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#collapseLanguages" aria-expanded="false" aria-controls="collapseExample">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Pridėti naują kalbą
+                </button>
+            </p>
+            <div class="collapse" id="collapseLanguages">
+                <div class="form-group row">
+                    <div class="col-md-10">
+                        {{ form_row(form.languageNew, {'attr': {'placeholder': 'Nauja kalba'} }) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.fkGenre) }}
+                </div>
+            </div>
+            <p>
+                <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#collapseGenres" aria-expanded="false" aria-controls="collapseExample">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Pridėti naują žanrą
+                </button>
+            </p>
+            <div class="collapse" id="collapseGenres">
+                <div class="form-group row">
+                    <div class="col-md-10">
+                        {{ form_row(form.genreNew, {'attr': {'placeholder': 'Naujas žanras'} }) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.fkAuthor) }}
+                </div>
+            </div>
+            <p>
+                <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#collapseAuthors" aria-expanded="false" aria-controls="collapseExample">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Pridėti naują autorių
+                </button>
+            </p>
+            <div class="collapse" id="collapseAuthors">
+                <div class="form-group row">
+                    <div class="col-md-10">
+                        {{ form_row(form.authorNameNew, {'attr': {'placeholder': 'Autoriaus vardas'} }) }}
+                        {{ form_row(form.authorLastNameNew, {'attr': {'placeholder': 'Autoriaus pavardė'} }) }}
+                        {{ form_row(form.authorNationalityNew, {'attr': {'placeholder': 'Autoriaus tautybė'} }) }}
+                        {{ form_row(form.authorBDayNew) }}
+                        {{ form_row(form.authorDDayNew) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-10">
+                    {{ form_row(form.fkPublisher) }}
+                </div>
+            </div>
+            <p>
+                <button class="btn btn-primary btn-xs" type="button" data-toggle="collapse" data-target="#collapsePublishers" aria-expanded="false" aria-controls="collapseExample">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Pridėti naują leidyklą
+                </button>
+            </p>
+            <div class="collapse" id="collapsePublishers">
+                <div class="form-group row">
+                    <div class="col-md-10">
+                        {{ form_row(form.publisherNameNew, {'attr': {'placeholder': 'Leidyklos pavadinimas'} }) }}
+                        {{ form_row(form.publisherAdressNew, {'attr': {'placeholder': 'Adresas'} }) }}
+                        {{ form_row(form.publisherCityNew, {'attr': {'placeholder': 'Miestas'} }) }}
+                        {{ form_row(form.publisherPostCodeNew, {'attr': {'placeholder': 'Pašto kodas'} }) }}
+                        {{ form_row(form.publisherPhoneNew, {'attr': {'placeholder': 'Telefono Nr.'} }) }}
+                    </div>
+                </div>
+            </div>
+
+            {{form_end(form)}}
+
         </div>
     </div>
+
+
 
 
 {% endblock %}

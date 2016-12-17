@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Books
@@ -12,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Books
 {
+
 
     public function __construct()
     {
@@ -23,6 +25,11 @@ class Books
     /**
      * @var string
      *
+     **@Assert\NotBlank(
+     *     message = "Užpildykite šį lauką.",
+     *)
+     *
+     *
      * @ORM\Column(name="isbn_code", type="string", length=13, nullable=false)
      */
     private $isbnCode;
@@ -30,6 +37,10 @@ class Books
     /**
      * @var string
      *
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Knygos pavadinimas negali būti ilgesnis nei 255 simboliai"
+     *)
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
@@ -180,6 +191,7 @@ class Books
      * Set isbnCode
      *
      * @param string $isbnCode
+     *
      *
      * @return Books
      */

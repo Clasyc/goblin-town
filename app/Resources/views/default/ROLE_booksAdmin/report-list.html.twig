@@ -12,16 +12,23 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts %}
+
+    {% javascripts
+    '@AppBundle/Resources/public/js/booksAdmins/predefined-dates.js'
+    %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+{% endjavascripts %}
 {% endblock %}
 
+
 {% block body %}
+    <div>
+        <a href={{ path('book_admins_books-report-form') }} class="btn btn-xs btn-primary">Grįžti atgal</a>
+    </div>
     <div class="panel panel-library">
         <div class="panel-heading">
             <div class="row">
-                <span class="glyphicon glyphicon-book"></span> KNYGOS
+                <span class="glyphicon glyphicon-book"></span> KNYGŲ ATASKAITA
             </div>
         </div>
         <div class="panel-body">
@@ -70,7 +77,6 @@
                             {{ book.fkLanguage.language }}
                         </div>
                         <div class="col-md-2">
-
                             <a href={{ path('book_admins_book-edit', { 'bookId' : book.id } ) }} class="btn btn-xs btn-success">Redaguoti</a>
                             <a href={{ path('book-delete', { 'bookId' : book.id } ) }}  class="btn btn-xs btn-danger">Trinti</a>
                             <a href={{ path('book_admins_books-view', { 'bookId' : book.id } ) }} class="btn btn-xs btn-info">Plačiau</a>
@@ -80,21 +86,4 @@
             {% endfor %}
         </div>
 
-
-
-        <div class="panel-footer">
-            <div style="text-align: right">
-                <a href={{ path('book_admins_book-add') }}  class="btn btn-xs btn-primary">Pridėti naują knygą</a>
-            </div>
-            <div class="navigation">
-                {{ knp_pagination_render(pagination) }}
-            </div>
-        </div>
-    </div>
-
-
-
 {% endblock %}
-
-
-

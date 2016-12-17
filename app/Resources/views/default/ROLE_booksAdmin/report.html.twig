@@ -12,20 +12,18 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts %}
+
+    {% javascripts
+    '@AppBundle/Resources/public/js/booksAdmins/predefined-dates.js'
+    %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+{% endjavascripts %}
 {% endblock %}
+
 
 {% block body %}
-    <form action="{{ path('book_admins_books-report') }}" method="post">
-        <div id="edit-template">
 
-        </div>
+{{ form(form) }}
 
-        <input type="submit" value="Save" />
-    </form>
+
 {% endblock %}
-
-
-
