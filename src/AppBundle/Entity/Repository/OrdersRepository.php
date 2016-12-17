@@ -47,6 +47,57 @@ class OrdersRepository extends EntityRepository
         }
     }
 
+    public function findOrdersGroupsCountForReport($id, $beginDate, $endDate)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT o, b, g, COUNT(g) AS cnt
+                 FROM AppBundle:Orders o 
+                 LEFT JOIN o.fkReader r 
+                 LEFT JOIN o.fkEmploye e 
+                 LEFT JOIN o.fkBook b
+                 LEFT JOIN b.fkGenre g
+                 WHERE r.personalId = :id 
+                 AND o.takeDate >= :beginDate AND o.takeDate <= :endDate GROUP BY g.id ORDER BY o.takeDate'
+            )->setParameter("id", $id)
+            ->setParameter("beginDate", $beginDate)
+            ->setParameter("endDate", $endDate)
+            ->getResult();
+    }
+
+    public function findOrdersCountForReport($id, $beginDate, $endDate)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(o) AS cnt
+                 FROM AppBundle:Orders o
+                 LEFT JOIN o.fkReader r 
+                 WHERE r.personalId = :id 
+                 AND o.takeDate >= :beginDate AND o.takeDate <= :endDate ORDER BY o.takeDate'
+            )->setParameter("id", $id)
+            ->setParameter("beginDate", $beginDate)
+            ->setParameter("endDate", $endDate)
+            ->getResult();
+    }
+
+    public function findOrdersLanguagesCountForReport($id, $beginDate, $endDate)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT o, b, l, COUNT(l) AS cnt
+                 FROM AppBundle:Orders o 
+                 LEFT JOIN o.fkReader r 
+                 LEFT JOIN o.fkEmploye e 
+                 LEFT JOIN o.fkBook b
+                 LEFT JOIN b.fkLanguage l
+                 WHERE r.personalId = :id 
+                 AND o.takeDate >= :beginDate AND o.takeDate <= :endDate GROUP BY l.id ORDER BY o.takeDate'
+            )->setParameter("id", $id)
+            ->setParameter("beginDate", $beginDate)
+            ->setParameter("endDate", $endDate)
+            ->getResult();
+    }
+
     public function findOrdersCount($readerId){
         $result = $this->getEntityManager()
             ->createQuery(

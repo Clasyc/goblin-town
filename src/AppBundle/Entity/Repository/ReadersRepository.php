@@ -93,4 +93,19 @@ class ReadersRepository extends  EntityRepository
             return false;
         }
     }
+
+    public function findReadersRegistrationCountsForReport($beginDate, $endDate)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT r, partial f.{id, registrationDate}, COUNT(r) AS cnt
+                 FROM AppBundle:Readers r
+                 LEFT JOIN r.fkFosuser f
+                 WHERE f.registrationDate >= :beginDate AND f.registrationDate <= :endDate GROUP BY f.registrationDate ORDER BY f.registrationDate'
+            )
+            ->setParameter("beginDate", $beginDate)
+            ->setParameter("endDate", $endDate)
+            ->getResult();
+    }
+
 }
