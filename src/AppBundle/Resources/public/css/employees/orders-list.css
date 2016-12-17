@@ -17,3 +17,15 @@
     display: block;
     margin: auto;
 }
+
+form.accept-order-form {
+    display: inline-block;
+}
+
+form.reject-order-form {
+    display: inline-block;
+}
+
+form.accept-return-form {
+    display: inline-block;
+}
