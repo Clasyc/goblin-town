@@ -15,6 +15,8 @@ class Reservations
     const RESERVED = "rezervuota";
     const CANCELLED = "atšaukta";
     const ORDERING = "užsakymas";
+    const DONE = "baigta";
+
     /**
      * @var \DateTime
      *

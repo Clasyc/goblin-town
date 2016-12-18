@@ -20,6 +20,10 @@ class ReaderController extends Controller
         $items_per_page = 25;
 
         $em = $this->getDoctrine()->getEntityManager();
+        // metodas patikrina ar nėra užsidelsusių rezervacijų
+        // tarkim žmogus prieina savo eilę užsisakyti knygą, bet uždelsia per ilgai (1 para)
+        // tai šis metodas tikrina ar ne per ilgai uždelsta, jei taip - atnaujina knygos ordered atributą
+        $em->getRepository('AppBundle:Books')->checkBookReservations();
         $books = $em->getRepository("AppBundle:Books")->findAllBooks(true);
 
         $wishlist = $em->getRepository("AppBundle:Books")->findBooksInWishlist($this->getReaderId(), true);

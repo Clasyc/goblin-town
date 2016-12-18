@@ -236,10 +236,10 @@ class OrdersController extends Controller
             }
 
             $order->setActualReturnDate($actualReturnDate);
-            $book->setOrdered(false);
+            $queueMoved = (new \DateTime());
             $this->getDoctrine()
                 ->getRepository('AppBundle:Reservations')
-                ->refreshReservations($book->getId());
+                ->refreshReservations($book->getId(), $queueMoved);
 
             $em->persist($order);
             $em->persist($book);

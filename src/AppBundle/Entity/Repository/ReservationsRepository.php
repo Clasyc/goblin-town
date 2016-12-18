@@ -28,7 +28,7 @@ class ReservationsRepository extends EntityRepository
         }
     }
 
-    public function refreshReservations($bookId)
+    public function refreshReservations($bookId, $queueMoved)
     {
         $ordering = Reservations::ORDERING;
         $reserved = Reservations::RESERVED;
@@ -36,9 +36,9 @@ class ReservationsRepository extends EntityRepository
         $this->getEntityManager()
             ->createQuery(
                 'UPDATE AppBundle:Reservations r
-                 SET r.queue = r.queue - 1
+                 SET r.queue = r.queue - 1, r.queueMoved = :queueMoved
                  WHERE r.fkBook = :bookId AND r.status = :reserved'
-            )->setParameters(array('bookId' => $bookId, 'reserved' => $reserved))
+            )->setParameters(array('bookId' => $bookId, 'reserved' => $reserved, 'queueMoved' => $queueMoved))
              ->execute();
 
         $this->getEntityManager()

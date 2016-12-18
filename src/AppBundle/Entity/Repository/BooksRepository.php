@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Reservations;
 use Doctrine\ORM\EntityRepository;
 
 
@@ -39,5 +40,28 @@ class BooksRepository extends  EntityRepository
         }else{
             return  $result;
         }
+    }
+
+    public function checkBookReservations()
+    {
+        $ordering = Reservations::ORDERING;
+        $cancelled = Reservations::CANCELLED;
+
+        $this->getEntityManager()
+            ->createQuery(
+                'UPDATE AppBundle:Books b
+                 SET b.ordered = false
+                 WHERE b.ordered = true
+                 AND b.id IN (SELECT IDENTITY(r.fkBook) FROM AppBundle:Reservations r WHERE r.status = :ordering AND DATE_DIFF(CURRENT_DATE(), r.queueMoved) > 1)'
+            )->setParameter('ordering', $ordering)
+            ->execute();
+
+        $this->getEntityManager()
+            ->createQuery(
+                'UPDATE AppBundle:Reservations r
+                 SET r.status = :cancelled
+                 WHERE r.status = :ordering AND DATE_DIFF(CURRENT_DATE(), r.queueMoved) > 1'
+            )->setParameters(array('ordering' => $ordering, 'cancelled' => $cancelled))
+            ->execute();
     }
 }
