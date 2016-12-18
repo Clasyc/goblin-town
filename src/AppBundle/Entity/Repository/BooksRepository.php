@@ -51,7 +51,8 @@ class BooksRepository extends  EntityRepository
             ->createQuery(
                 'SELECT b.id
                      FROM AppBundle:Books b
-                     WHERE b.ordered = true AND b.id IN (SELECT IDENTITY(r.fkBook) FROM AppBundle:Reservations r WHERE r.status = :ordering AND DATE_DIFF(CURRENT_DATE(), r.queueMoved) > 1)'
+                     WHERE b.ordered = true 
+                     AND b.id IN (SELECT IDENTITY(r.fkBook) FROM AppBundle:Reservations r WHERE r.status = :ordering AND DATE_DIFF(CURRENT_DATE(), r.queueMoved) > 1)'
             )->setParameter('ordering', $ordering)
             ->getResult();
     }
@@ -76,8 +77,8 @@ class BooksRepository extends  EntityRepository
         $em->createQuery(
                 'UPDATE AppBundle:Reservations r
                  SET r.queue = r.queue - 1, r.queueMoved = CURRENT_DATE()
-                 WHERE r.fkBook IN (:books)'
-            )->setParameter('books', $books)
+                 WHERE r.fkBook IN (:books) AND (r.status = :ordering OR r.status = :reserved)'
+            )->setParameters(array('books' => $books, 'ordering' => $ordering, 'reserved' => $reserved))
             ->execute();
 
         $em->createQuery(

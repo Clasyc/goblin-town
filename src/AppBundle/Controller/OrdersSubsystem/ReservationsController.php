@@ -89,21 +89,7 @@ class ReservationsController extends Controller
                 ->getRepository('AppBundle:Reservations')
                 ->refreshReservationsAfterCancel($reservation->getFkBook(), new \DateTime(), $queue);
 
-         /*   $queue = $this->getDoctrine()
-                ->getEntityManager()
-                ->getRepository('AppBundle:Reservations')
-                ->countQueueNumber($reservation->getFkBook());
-
-            if ($queue[0][1] == 0)
-            {
-                $book = $this->getDoctrine()
-                    ->getRepository('AppBundle:Books')
-                    ->find($reservation->getFkBook());
-
-                $book->setOrdered(false);
-                $em->persist($book);
-                $em->flush();
-            }*/
+            $this->checkIfNoReservationQueue($reservation->getFkBook());
 
             $this->addFlash(
                 'info',
@@ -138,6 +124,25 @@ class ReservationsController extends Controller
         return $this->render('default/ROLE_reader/reservations-list.html.twig', [
             "pagination" => $pagination
         ]);
+    }
+
+    private function checkIfNoReservationQueue($bookId)
+    {
+        $queue = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('AppBundle:Reservations')->countQueueNumber($bookId);
+
+        if ($queue[0][1] == 0)
+        {
+            $book = $this->getDoctrine()
+                ->getRepository('AppBundle:Books')
+                ->find($bookId);
+
+            $book->setOrdered(false);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($book);
+            $em->flush();
+        }
     }
 
     private function getReaderId()

@@ -67,7 +67,6 @@ class OrdersController extends Controller
                         ->getRepository('AppBundle:Reservations')
                         ->find($request->request->get('reservation'));
 
-                    $queue = $reservation->getQueue();
                     $reservation->setStatus(Reservations::DONE);
                     $reservation->setQueue(-1);
 
@@ -84,11 +83,6 @@ class OrdersController extends Controller
                         'success',
                         'Knyga sėkmingai užsakyta.'
                     );
-
-                  /*  $this->getDoctrine()
-                        ->getEntityManager()
-                        ->getRepository('AppBundle:Reservations')
-                        ->refreshReservationsAfterSuccess($reservation->getFkBook(), new \DateTime(), $queue);*/
                 }
                 else
                 {
@@ -181,12 +175,16 @@ class OrdersController extends Controller
                     ->getRepository('AppBundle:Books')
                     ->find($request->request->get('book'));
                 $order->setStatus($status);
-                $book->setOrdered(false);
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($order);
-                $em->persist($book);
                 $em->flush();
+
+                $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('AppBundle:Reservations')
+                    ->refreshReservations($book->getId(), new \DateTime());
+                $this->checkIfNoReservationQueue($book->getId());
 
                 $this->addFlash(
                     'info',
@@ -274,6 +272,7 @@ class OrdersController extends Controller
             $em->persist($order);
             $em->persist($book);
             $em->flush();
+            $this->checkIfNoReservationQueue($book->getId());
         }
         else
         {
@@ -283,6 +282,25 @@ class OrdersController extends Controller
             );
         }
         return $this->redirectToRoute("orders_employee-orders-list");
+    }
+
+    private function checkIfNoReservationQueue($bookId)
+    {
+        $queue = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('AppBundle:Reservations')->countQueueNumber($bookId);
+
+        if ($queue[0][1] == 0)
+        {
+            $book = $this->getDoctrine()
+                ->getRepository('AppBundle:Books')
+                ->find($bookId);
+
+            $book->setOrdered(false);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($book);
+            $em->flush();
+        }
     }
 
     private function getReaderId()
