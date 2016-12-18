@@ -7,9 +7,7 @@ $('a.edit-reader').confirm({
             location.href = this.$target.attr('href');
         },
         Atšaukti: function(){
-
         }
-
     }
 });
 

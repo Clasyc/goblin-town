@@ -71,7 +71,7 @@ class ReaderController extends Controller
 
         $form = $this->createForm(ReaderRegistration_NoFosType::class, $reader, array(
             'method' => 'POST',
-            'validation_groups' => array('Reader'),
+            'validation_groups' => array('profile'),
             'attr' => array('class' => 'col-sm-10 col-sm-offset-1')
         ));
 
@@ -136,16 +136,15 @@ class ReaderController extends Controller
 
         $form = $this->createForm(ReaderRegistration_NoFosType::class, $reader, array(
             'method' => 'POST',
-            'validation_groups' => array('Reader'),
+            'validation_groups' => array('profile'),
             'attr' => array('class' => 'col-sm-10 col-sm-offset-1')
         ));
 
         $form->handleRequest($request);
-        $reader->getFosuser()->setEmail($reader->getEmail());
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $form->getData();
+            $reader->getFosuser()->setEmail($reader->getEmail());
 
             $em->persist($reader);
             $em->flush();
@@ -155,6 +154,16 @@ class ReaderController extends Controller
                 'Skaitytojas ' . $reader->getName() . " " . $reader->getLastName() . " sėkmingai redaguotas!"
             );
             return $this->redirectToRoute('readers-admin_readers-list');
+        }else{
+            $errors = $form->getErrors(true);
+            if (!empty($errors)) {
+                foreach ($errors as $error) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        $error->getMessage()
+                    );
+                }
+            }
         }
 
         return $this->render('default/ROLE_readers_admin/reader-edit.html.twig', [
@@ -222,114 +231,7 @@ class ReaderController extends Controller
         }
     }
 
-    /**
-     * @Route("/readers-admin/reader/penalty/check", name="readers-admin_check-penalty-reader")
-     */
-    public function ajaxCheckPenaltyReaderAction(Request $request)
-    {
 
-        if ($request->isXmlHttpRequest()) {
-            $typ = $request->get("type");
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $readerId = $request->get("reader");
-
-            $reader = $em->getRepository("AppBundle:Readers")->find($readerId);
-
-            if (empty($reader)) {
-                $response = new JsonResponse(array(
-                    "status" => "empty",
-                ));
-                return $response;
-            }
-            if ($em->getRepository("AppBundle:Penalty")->isActivePenalty($readerId)) {
-                $response = new JsonResponse(array(
-                    "status" => "active",
-                ));
-                return $response;
-            }
-
-
-            if ($typ == "check") {
-                $response = new JsonResponse(array(
-                    "name" => $reader->getName() . " " . $reader->getLastName(),
-                    "status" => "ok",
-                ));
-            } else if ($typ == "delete") {
-                $penalty = new Penalty();
-
-                $user = $this->get('security.token_storage')->getToken()->getUser();
-                $readerAdmin = $em->getRepository("AppBundle:ReadersAdmin")->findReadersAdminByFosUser($user->getId());
-
-                $date = $request->get("date");
-                $name = $request->get("name");
-                $comment = $request->get("comment");
-
-                if((\DateTime::createFromFormat('Y-m-d', $date) === FALSE)){
-                    $response = new JsonResponse(array(
-                        "status" => "error",
-                    ));
-                    return $response;
-                }
-                $penalty->setFkReader($reader);
-                $penalty->setFkReadersAdmin($readerAdmin);
-                $penalty->setPenaltyBeginDate(new \DateTime());
-                $penalty->setPenaltyEndDate(new \DateTime($date));
-                $penalty->setName($name);
-                $penalty->setComment($comment);
-
-                $validator = $this->get('validator');
-                $errors = $validator->validate($penalty);
-
-                if (count($errors) > 0) {
-                    $response = new JsonResponse(array(
-                        "status" => "error",
-                    ));
-                    return $response;
-                }
-
-                $em->persist($penalty);
-                $em->flush();
-                $penalty_id = $penalty->getId();
-
-                $response = new JsonResponse(array(
-                    "name" => $reader->getName() . " " . $reader->getLastName(),
-                    "status" => "ok",
-                    "id" => $penalty_id,
-                    "date" => $penalty->getPenaltyBeginDate()->format('Y-m-d H:i:s')."-".$penalty->getPenaltyEndDate()->format("Y-m-d")
-                ));
-
-            }
-            return $response;
-        }
-    }
-
-    /**
-     * @Route("/readers-admin/reader/penalty/delete", name="readers-admin_delete-penalty-reader")
-     */
-    public function ajaxDeletePenaltyReaderAction(Request $request)
-    {
-        if ($request->isXmlHttpRequest()) {
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $penaltyId = $request->get("penalty");
-
-            $penalty = $em->getRepository("AppBundle:Penalty")->find($penaltyId);
-            if(empty($penalty)){
-                $response = new JsonResponse(array(
-                    "deleted" => false,
-                ));
-                return $response;
-            }
-            $em->remove($penalty);
-            $em->flush();
-
-            $response = new JsonResponse(array(
-                "deleted" => true,
-            ));
-            return $response;
-        }
-    }
 
 
 }

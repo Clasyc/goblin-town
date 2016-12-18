@@ -12,3 +12,6 @@ services:
             arguments: ['@router', '@security.authorization_checker']
             tags:
                 - { name: kernel.event_subscriber }
+    app_user.penalty_warning:
+            class: AppBundle\Services\PenaltyWarning
+            arguments: ['@security.token_storage', '@doctrine.orm.entity_manager']

@@ -1,7 +1,6 @@
 function deletePenalty(id, obj, reader){
 
     $(".loader").show();
-    console.log("penalty id: "+id);
     var data = {penalty: id};
     $.ajax({
         type: "GET",
@@ -24,7 +23,6 @@ function deletePenalty(id, obj, reader){
                     closeIcon: true
                 });
             }
-            console.log(response.status);
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
@@ -33,10 +31,8 @@ function deletePenalty(id, obj, reader){
 }
 
 function clearReaderElement(obj, reader){
-    console.log("OBJ: "+reader);
     var par = obj.parent();
     obj.parent().parent().parent().removeClass("penalty");
-
     obj.remove();
     var appended = par.append('<a href="#" data-title="Pridėti nuobaudą." data-reader="'+reader+'" onclick= "return false;" class="btn btn-xs btn-default add-penalty"><span class="glyphicon glyphicon-ban-circle"></span> Pridėti nuobaudą</a>')
         .unbind().click(function(){

@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="fos_user")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class FosUser extends BaseUser
 {
@@ -22,6 +23,35 @@ class FosUser extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(name="registration_date", type="string", length=255)
+     */
+
+    protected $registrationDate;
+    /**
+     * @ORM\PrePersist
+     */
+    public function doOnPrePersist()
+    {
+        $this->registrationDate = date('Y-m-d');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrationDate()
+    {
+        return $this->registrationDate;
+    }
+
+    /**
+     * @param mixed $registrationDate
+     */
+    public function setRegistrationDate($registrationDate)
+    {
+        $this->registrationDate = $registrationDate;
+    }
 
 
 

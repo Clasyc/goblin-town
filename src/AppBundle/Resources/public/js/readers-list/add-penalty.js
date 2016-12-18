@@ -2,8 +2,6 @@
 
 $('a.add-penalty').click(function(){
     checkForPenalty($(this).attr("data-reader"), $(this).attr("data-reader-name"), $(this));
-    console.log("TEST: ");
-    console.log($(this));
 });
 $('body').on('focus',".penalty-date", function(){
     $(this).datepicker({
@@ -28,7 +26,6 @@ function checkForPenalty(id, reader_name, obj) {
             }else if(response.status == "ok"){
                 var p_id = response.id;
                 var r_name = response.name;
-                console.log("KURVA"+p_id+" "+r_name);
                 $.confirm({
                     icon: 'glyphicon glyphicon-ban-circle',
                     title: "Pridėti nuobaudą",
@@ -64,7 +61,6 @@ function checkForPenalty(id, reader_name, obj) {
 }
 
 function addPenalty(obj, id, date, title, comment, reader_name, penalty_id){
-    console.log(id+" "+date+" "+title+" "+comment+" "+reader_name+" "+penalty_id);
     $(".loader").show();
     var typ = "delete";
     var data = {reader: id, type: typ, date: date, name: title, comment: comment};
@@ -89,7 +85,6 @@ function addPenalty(obj, id, date, title, comment, reader_name, penalty_id){
                     closeIcon: true
                 });
             }
-            //console.log(response.status);
         },
         error: function (xhr, status, error) {
             console.log(xhr.responseText);
@@ -98,7 +93,6 @@ function addPenalty(obj, id, date, title, comment, reader_name, penalty_id){
 
 }
 function changeReaderElement(obj, reader, reader_name, penalty_date, penalty_name, penalty_comment, penalty_id){
-    //console.log("OBJ: "+reader);
     var par = obj.parent();
     obj.parent().parent().parent().addClass("penalty");
     if(penalty_name == undefined)

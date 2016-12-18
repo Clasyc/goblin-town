@@ -22,7 +22,7 @@ class ProfileEditType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', null, array("label" => "Prisijungimo vardas"))
+            ->add('username', null, array("label" => "Prisijungimo vardas",))
             ->add('plainPassword', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\RepeatedType'), array(
                 'type' => LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\PasswordType'),
                 'first_options' => array('label' => 'Slaptažodis'),
@@ -35,6 +35,7 @@ class ProfileEditType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\FosUser',
+            'validation_groups' => array('Fosuser'),
         ]);
     }
 }

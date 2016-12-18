@@ -21,10 +21,13 @@ class Readers
      * @var string
      * @Assert\NotBlank(
      *     message = "Užpildykite šį lauką.",
+     *     groups={"profile"}
+     *
      *     )
      * @Assert\Length(
      *      max = 40,
-     *      maxMessage = "Vardas negali būti ilgesnis nei 40 simbolių"
+     *      maxMessage = "Vardas negali būti ilgesnis nei 40 simbolių",
+     *      groups={"profile"}
      *)
      * @ORM\Column(name="name", type="string", length=40, nullable=false)
      */
@@ -34,10 +37,12 @@ class Readers
      * @var string
      * @Assert\NotBlank(
      *     message = "Užpildykite šį lauką.",
+     *     groups={"profile"}
      *     )
      * @Assert\Length(
      *      max = 50,
-     *      maxMessage = "Pavardė negali būti ilgesnis nei 50 simbolių"
+     *      maxMessage = "Pavardė negali būti ilgesnis nei 50 simbolių",
+     *      groups={"profile"}
      *)
      * @ORM\Column(name="last_name", type="string", length=50, nullable=false)
      */
@@ -47,14 +52,17 @@ class Readers
      * @var string
      * @Assert\NotBlank(
      *     message = "Užpildykite šį lauką.",
+     *     groups={"profile"}
      *     )
      *  @Assert\Email(
      *     message = "Neteisingas el.pašto formatas",
+     *     groups={"profile"},
      *     checkMX = true
      * )
      * @Assert\Length(
      *      max = 180,
-     *      maxMessage = "Miesto pavadinimas negali būti ilgesnis nei 180 simbolių"
+     *      maxMessage = "Miesto pavadinimas negali būti ilgesnis nei 180 simbolių",
+     *      groups={"profile"}
      *)
      * @ORM\Column(name="email", type="string", length=180, nullable=false)
      */
@@ -62,18 +70,22 @@ class Readers
 
     /**
      * @var integer
+     *
      * @Assert\NotBlank(
      *     message = "Užpildykite telefono laukelį.",
+     *     groups={"profile"}
      *     )
      * @Assert\Type(
      *     type="integer",
-     *     message="Tefenono numeris privalo būti tokio formato: 86*******."
+     *     message="Tefenono numeris privalo būti tokio formato: 86*******.",
+     *     groups={"profile"}
      * )
      * @Assert\Range(
      *      min = 860000000,
      *      max = 869999999,
      *      minMessage="Tefenono numeris privalo būti tokio formato: 86*******.",
-     *      maxMessage="Tefenono numeris privalo būti tokio formato: 86*******."
+     *      maxMessage="Tefenono numeris privalo būti tokio formato: 86*******.",
+     *      groups={"profile"}
      *
      *)
      * @ORM\Column(name="phone_number", type="integer", nullable=false)
@@ -84,10 +96,12 @@ class Readers
      * @var string
      * @Assert\NotBlank(
      *     message = "Užpildykite šį lauką.",
+     *     groups={"profile"}
      *     )
      * @Assert\Length(
      *      max = 50,
-     *      maxMessage = "Miestas negali būti ilgesnis nei 50 simbolių"
+     *      maxMessage = "Miestas negali būti ilgesnis nei 50 simbolių",
+     *      groups={"profile"}
      *)
      * @ORM\Column(name="city", type="string", length=35, nullable=false)
      */
@@ -97,10 +111,12 @@ class Readers
      * @var string
      * @Assert\NotBlank(
      *     message = "Užpildykite šį lauką.",
+     *     groups={"profile"}
      *     )
      * @Assert\Length(
      *      max = 255,
-     *      maxMessage = "Pavardė negali būti ilgesnis nei 255 simboliai"
+     *      maxMessage = "Pavardė negali būti ilgesnis nei 255 simboliai",
+     *      groups={"profile"}
      *)
      * @ORM\Column(name="adress", type="string", length=255, nullable=false)
      */
