@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+{% stylesheets
+
+%}
+<link rel="stylesheet" href="{{ asset_url }}"/>
+{% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% javascripts
+
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+{% for flashMessage in app.session.flashbag.get('info') %}
+<div class="alert alert-success text-center">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+{% for flashMessage in app.session.flashbag.get('error') %}
+<div class="alert alert-danger text-center">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+<div class="panel panel-library">
+    <div class="panel-heading">
+        <div class="row">
+            <span class="glyphicon glyphicon-file"></span> ATASKAITOS
+        </div>
+    </div>
+    <div class="panel-body">
+        <li>
+            <a href="{{ path('orders_employee-orders-report') }}" style="font-weight: bold;">Knygų užsakymų ataskaita</a>
+        </li>
+        <li>
+            <a href="{{ path('orders_employee-reservations-report') }}" style="font-weight: bold;">Knygų rezervacijų ataskaita</a>
+        </li>
+        <li>
+            <a href="{{ path('orders_employee-debtors-report') }}" style="font-weight: bold;">Skolininkų ataskaita</a>
+        </li>
+    </div>
+    <div class="panel-footer">
+    </div>
+</div>
+{% endblock %}
+

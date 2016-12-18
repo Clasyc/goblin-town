@@ -43,7 +43,15 @@
 
         <div class="col-md-3">
 
-            <p class="lead">Funkcijos</p>
+            {% if is_granted('ROLE_READERS_ADMIN') %}
+                <p class="lead">Skaitytojų administratorius</p>
+            {% elseif is_granted('ROLE_READER') %}
+                <p class="lead">Skaitytojas</p>
+            {% elseif is_granted('ROLE_EMPLOYEE') %}
+                <p class="lead">Darbuotojas</p>
+            {% elseif is_granted('ROLE_BOOK_ADMIN') %}
+                <p class="lead">Knygų administratorius</p>
+            {% endif %}
 
             {% if is_granted('ROLE_READER') %}
                 {%  if penalty.is_active %}
@@ -67,8 +75,6 @@
                     <a href="#" class="list-group-item">Skaitytojo funkcija 1</a>
                     <a href="#" class="list-group-item">Skaitytojo funkcija 2</a>
                 {% elseif is_granted('ROLE_EMPLOYEE') %}
-                    <a href="#" class="list-group-item">Darbuotojo funkcija 1</a>
-                    <a href="#" class="list-group-item">Darbuotojo funkcija 2</a>
                 {% elseif is_granted('ROLE_BOOK_ADMIN') %}
                     <a href="#" class="list-group-item">Knygų admino funkcija 1</a>
                     <a href="#" class="list-group-item">Knygų admino funkcija 2</a>
