@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/reservations-list.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    '@AppBundle/Resources/public/js/readers/reservations-list.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert-success text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-user"></span> MANO REZERVACIJOS
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin:5px;">
+                <div class="col-sm-1">
+                    <th>{{ knp_pagination_sortable(pagination, 'ID', 'r.id') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    <th>{{ knp_pagination_sortable(pagination, 'Knyga', 'r.fkBook.title') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    <th>{{ knp_pagination_sortable(pagination, 'Data', 'r.date') }}</th>
+                </div>
+                <div class="col-sm-1">
+                    <th>{{ knp_pagination_sortable(pagination, 'Nr. Eilėje', 'r.queue') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    <th>{{ knp_pagination_sortable(pagination, 'Eilė pajudėjo', 'r.queueMoved') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    <th>{{ knp_pagination_sortable(pagination, 'Būsena', 'r.status') }}</th>
+                </div>
+                <div class="col-sm-2">
+                    Veiksmai
+                </div>
+            </div>
+            {% for reservation in pagination %}
+                <div class="reservation-list-element">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            {{ reservation.id }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ reservation.fkBook.title }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ reservation.date|date('Y-m-d H:m:s') }}
+                        </div>
+                        <div class="col-sm-1">
+                            {% if reservation.queue != -1 %}
+                                {{ reservation.queue }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ reservation.queueMoved|date('Y-m-d H:m:s') }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ reservation.status }}
+                        </div>
+                        <div class="col-sm-2">
+                            {% if reservation.status == constant('AppBundle\\Entity\\Reservations::ORDERING') %}
+                                <a href="{{ path('orders_create-after-reservation-order-form', {'id': reservation.fkBook.id}) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-book"></span></a>
+                            {% endif %}
+                            {% if reservation.status == constant('AppBundle\\Entity\\Reservations::RESERVED') or reservation.status == constant('AppBundle\\Entity\\Reservations::ORDERING') %}
+                                <form class="cancel-reservation-form" action="{{ path('orders_cancel-reservation') }}" name="orders_cancel-reservation" method="post">
+                                    <input type="hidden" name="id" value="{{ reservation.id }}">
+                                    <button type="submit" class="btn btn-default btn-xs cancel-reservation-button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="panel-footer">
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

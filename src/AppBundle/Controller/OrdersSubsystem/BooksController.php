@@ -66,6 +66,21 @@ class BooksController extends Controller
         }
     }
 
+    /**
+     * @Route("/reader/order-book/{id}", name="orders_create-after-reservation-order-form")
+     */
+    public function createAfterReservationOrderFormAction($id)
+    {
+        $book = $this->getDoctrine()
+            ->getRepository('AppBundle:Books')
+            ->find($id);
+
+        $csrfToken = $this->has('security.csrf.token_manager')
+            ? $this->get('security.csrf.token_manager')->refreshToken('order')->getValue()
+            : null;
+
+        return $this->render('default/ROLE_reader/book-order.html.twig', array('book' => $book, 'csrf_token' => $csrfToken));
+    }
 
     private function isBookRelatedWithReader($readerId, $bookId)
     {

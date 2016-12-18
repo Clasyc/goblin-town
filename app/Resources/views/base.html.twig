@@ -48,7 +48,7 @@
                     <a href="#" class="list-group-item">Skaitytojų admino funkcija 1</a>
                     <a href="#" class="list-group-item">Skaitytojų admino funkcija 2</a>
                 {% elseif is_granted('ROLE_READER') %}
-                    <a href="#" class="list-group-item">Skaitytojo funkcija 1</a>
+                    <a href=" {{ path('orders_reader-reservations-list') }}" class="list-group-item">Mano rezervacijos</a>
                     <a href="#" class="list-group-item">Skaitytojo funkcija 2</a>
                 {% elseif is_granted('ROLE_EMPLOYEE') %}
                     <a href="#" class="list-group-item">Darbuotojo funkcija 1</a>
