@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller\OrdersSubsystem;
 
+use AppBundle\Entity\Depts;
 use AppBundle\Entity\Orders;
+use AppBundle\Entity\Reservations;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +61,29 @@ class OrdersController extends Controller
                         'Knyga sėkmingai užsakyta.'
                     );
                 }
+                else if ($request->request->get('reservation') > -1)
+                {
+                    $reservation = $this->getDoctrine()
+                        ->getRepository('AppBundle:Reservations')
+                        ->find($request->request->get('reservation'));
+
+                    $reservation->setStatus(Reservations::DONE);
+                    $reservation->setQueue(-1);
+
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($reservation);
+
+                    $book->setOrdered(true);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($order);
+                    $em->persist($book);
+                    $em->flush();
+
+                    $this->addFlash(
+                        'success',
+                        'Knyga sėkmingai užsakyta.'
+                    );
+                }
                 else
                 {
                     $this->addFlash(
@@ -81,7 +106,7 @@ class OrdersController extends Controller
     /**
      * @Route("/employee/orders-list/{page}", name="orders_employee-orders-list", requirements={"page": "\d+"})
      */
-    public function getAllOrdersList(Request $request, $page = 1)
+    public function getAllOrdersListAction(Request $request, $page = 1)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -121,7 +146,7 @@ class OrdersController extends Controller
     /**
      * @Route("/employee/orders-list/process", name="orders_employee-process-order")
      */
-    public function processOrder(Request $request)
+    public function processOrderAction(Request $request)
     {
         $order = $this->getDoctrine()
             ->getRepository('AppBundle:Orders')
@@ -150,12 +175,16 @@ class OrdersController extends Controller
                     ->getRepository('AppBundle:Books')
                     ->find($request->request->get('book'));
                 $order->setStatus($status);
-                $book->setOrdered(false);
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($order);
-                $em->persist($book);
                 $em->flush();
+
+                $this->getDoctrine()
+                    ->getEntityManager()
+                    ->getRepository('AppBundle:Reservations')
+                    ->refreshReservations($book->getId(), new \DateTime());
+                $this->checkIfNoReservationQueue($book->getId());
 
                 $this->addFlash(
                     'info',
@@ -175,11 +204,103 @@ class OrdersController extends Controller
     }
 
     /**
-     * @Route("/employee/orders-list/return", name="orders_employee-process-return")
+     * @Route("/employee/order/{id}", name="orders_employee-get-order")
      */
-    public function processReturn(Request $request)
+    public function getOrderFormAction($id)
     {
+        $order = $this->getDoctrine()
+            ->getRepository('AppBundle:Orders')
+            ->find($id);
 
+        $csrfToken = $this->has('security.csrf.token_manager')
+            ? $this->get('security.csrf.token_manager')->refreshToken('order')->getValue()
+            : null;
+
+        return $this->render('default/ROLE_employee/order-info.html.twig', array('order' => $order, 'csrf_token' => $csrfToken));
+    }
+
+    /**
+     * @Route("/employee/accept-book-return", name="orders_employee-return-book")
+     */
+    public function acceptBookReturnAction(Request $request)
+    {
+        $order = $this->getDoctrine()
+            ->getRepository('AppBundle:Orders')
+            ->find($request->query->get('id'));
+        $book = $this->getDoctrine()
+            ->getRepository('AppBundle:Books')
+            ->find($order->getFkBook());
+        $actualReturnDate = (new \DateTime());
+
+        if ($request->isMethod('POST') && $this->isCsrfTokenValid('order', $request->request->get('_csrf_token')))
+        {
+            $em = $this->getDoctrine()->getManager();
+
+            if ($actualReturnDate > $order->getAgreedReturnDate())
+            {
+                $dateDifference = $actualReturnDate->diff($order->getAgreedReturnDate())->format("%a");
+                $debt = new Depts();
+                $debt->setStatus(Depts::UNPAID);
+                $debt->setDescription("Skola už pavėluotai grąžintą knygą.");
+                $debt->setFkOrder($order);
+                $debt->setPaymentDate($actualReturnDate);
+                $debt->setAmount($dateDifference * $order->getDeptRatePerDay());
+
+                $order->setStatus(Orders::DEBT);
+                $em->persist($debt);
+
+                $this->addFlash(
+                    'info',
+                    'Knyga grąžinta. Sudaryta skola už vėlavimą.'
+                );
+            }
+            else
+            {
+                $this->addFlash(
+                    'info',
+                    'Knyga grąžinta laiku.'
+                );
+                $order->setStatus(Orders::RETURNED);
+            }
+
+            $order->setActualReturnDate($actualReturnDate);
+            $queueMoved = (new \DateTime());
+            $this->getDoctrine()
+                ->getRepository('AppBundle:Reservations')
+                ->refreshReservations($book->getId(), $queueMoved);
+
+            $em->persist($order);
+            $em->persist($book);
+            $em->flush();
+            $this->checkIfNoReservationQueue($book->getId());
+        }
+        else
+        {
+            $this->addFlash(
+                'error',
+                'Įvyko klaida.'
+            );
+        }
+        return $this->redirectToRoute("orders_employee-orders-list");
+    }
+
+    private function checkIfNoReservationQueue($bookId)
+    {
+        $queue = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('AppBundle:Reservations')->countQueueNumber($bookId);
+
+        if ($queue[0][1] == 0)
+        {
+            $book = $this->getDoctrine()
+                ->getRepository('AppBundle:Books')
+                ->find($bookId);
+
+            $book->setOrdered(false);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($book);
+            $em->flush();
+        }
     }
 
     private function getReaderId()

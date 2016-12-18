@@ -65,6 +65,86 @@ class ReservationsController extends Controller
         return $this->redirectToRoute("readers_books-list");
     }
 
+    /**
+     * @Route("/reader/cancel-reservation", name="orders_cancel-reservation")
+     */
+    public function cancelBookReservationAction(Request $request)
+    {
+        $reservation = $this->getDoctrine()
+            ->getRepository('AppBundle:Reservations')
+            ->find($request->request->get('id'));
+
+        if ($request->isMethod('POST'))
+        {
+            $queue = $reservation->getQueue();
+            $reservation->setStatus(Reservations::CANCELLED);
+            $reservation->setQueue(-1);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($reservation);
+            $em->flush();
+
+            $this->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('AppBundle:Reservations')
+                ->refreshReservationsAfterCancel($reservation->getFkBook(), new \DateTime(), $queue);
+
+            $this->checkIfNoReservationQueue($reservation->getFkBook());
+
+            $this->addFlash(
+                'info',
+                'Rezervacija panaikinta.'
+            );
+        }
+        else
+        {
+            $this->addFlash(
+                'error',
+                'Įvyko klaida.'
+            );
+        }
+        return $this->redirectToRoute("orders_reader-reservations-list");
+    }
+
+    /**
+     * @Route("/reader/reservations-list/{page}", name="orders_reader-reservations-list")
+     */
+    public function getReadersReservationsAction($page = 1)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $reservations = $em->getRepository("AppBundle:Reservations")->findReadersReservations($this->getReaderId(), true);
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $reservations, /* query NOT result */
+            $page/*page number*/,
+            10/*limit per page*/
+        );
+
+        return $this->render('default/ROLE_reader/reservations-list.html.twig', [
+            "pagination" => $pagination
+        ]);
+    }
+
+    private function checkIfNoReservationQueue($bookId)
+    {
+        $queue = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('AppBundle:Reservations')->countQueueNumber($bookId);
+
+        if ($queue[0][1] == 0)
+        {
+            $book = $this->getDoctrine()
+                ->getRepository('AppBundle:Books')
+                ->find($bookId);
+
+            $book->setOrdered(false);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($book);
+            $em->flush();
+        }
+    }
+
     private function getReaderId()
     {
         $em = $this->getDoctrine()->getEntityManager();

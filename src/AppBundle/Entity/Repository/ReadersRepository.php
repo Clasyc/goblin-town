@@ -75,13 +75,15 @@ class ReadersRepository extends  EntityRepository
 
     public function isBookAlreadyReservedByReader($userId, $bookId)
     {
-        $cancelled = Reservations::CANCELLED;
+        $ordering = Reservations::ORDERING;
+        $reserved = Reservations::RESERVED;
+
         $value = $this->getEntityManager()
             ->createQuery(
                 'SELECT COUNT(r.id)
                  FROM AppBundle:Reservations r
-                 WHERE r.fkReader = :userId AND r.status != :cancelled AND r.fkBook = :bookId'
-            )->setParameters(array('userId' => $userId, 'bookId' => $bookId, 'cancelled' => $cancelled))
+                 WHERE r.fkReader = :userId AND (r.status = :ordering OR r.status = :reserved) AND r.fkBook = :bookId'
+            )->setParameters(array('userId' => $userId, 'bookId' => $bookId, 'reserved' => $reserved, 'ordering' => $ordering))
             ->getResult()[0];
 
         if ($value[1] > 0)
