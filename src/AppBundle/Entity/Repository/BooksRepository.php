@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Orders;
 use AppBundle\Entity\Reservations;
 use Doctrine\ORM\EntityRepository;
 
@@ -42,26 +43,57 @@ class BooksRepository extends  EntityRepository
         }
     }
 
-    public function checkBookReservations()
+    public function getOutdatedReservationsBooksIds()
+    {
+        $ordering = Reservations::ORDERING;
+
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT b.id
+                     FROM AppBundle:Books b
+                     WHERE b.ordered = true AND b.id IN (SELECT IDENTITY(r.fkBook) FROM AppBundle:Reservations r WHERE r.status = :ordering AND DATE_DIFF(CURRENT_DATE(), r.queueMoved) > 1)'
+            )->setParameter('ordering', $ordering)
+            ->getResult();
+    }
+
+    public function checkBookReservations($books)
     {
         $ordering = Reservations::ORDERING;
         $cancelled = Reservations::CANCELLED;
+        $reserved = Reservations::RESERVED;
+        $waiting = Orders::WAITING;
+        $borrowed = Orders::BORROWED;
 
-        $this->getEntityManager()
-            ->createQuery(
-                'UPDATE AppBundle:Books b
-                 SET b.ordered = false
-                 WHERE b.ordered = true
-                 AND b.id IN (SELECT IDENTITY(r.fkBook) FROM AppBundle:Reservations r WHERE r.status = :ordering AND DATE_DIFF(CURRENT_DATE(), r.queueMoved) > 1)'
-            )->setParameter('ordering', $ordering)
-            ->execute();
+        $em = $this->getEntityManager();
 
-        $this->getEntityManager()
-            ->createQuery(
+        $em->createQuery(
                 'UPDATE AppBundle:Reservations r
-                 SET r.status = :cancelled
+                 SET r.status = :cancelled, r.queue = -1
                  WHERE r.status = :ordering AND DATE_DIFF(CURRENT_DATE(), r.queueMoved) > 1'
             )->setParameters(array('ordering' => $ordering, 'cancelled' => $cancelled))
+            ->execute();
+
+        $em->createQuery(
+                'UPDATE AppBundle:Reservations r
+                 SET r.queue = r.queue - 1, r.queueMoved = CURRENT_DATE()
+                 WHERE r.fkBook IN (:books)'
+            )->setParameter('books', $books)
+            ->execute();
+
+        $em->createQuery(
+                'UPDATE AppBundle:Reservations r
+                 SET r.status = :ordering
+                 WHERE r.queue = 0 AND r.fkBook IN (:books)'
+            )->setParameters(array('books' => $books, 'ordering' => $ordering))
+            ->execute();
+
+        $em->createQuery(
+            'UPDATE AppBundle:Books b
+             SET b.ordered = FALSE 
+             WHERE b.id IN (:books)
+             AND NOT EXISTS (SELECT r FROM AppBundle:Reservations r WHERE r.fkBook = b.id AND (r.status = :reserved OR r.status = :ordering))
+             AND NOT EXISTS (SELECT o FROM AppBundle:Orders o WHERE o.fkBook = b.id AND (o.status = :waiting OR o.status = :borrowed))'
+        )->setParameters(array('books' => $books, 'reserved' => $reserved, 'ordering' => $ordering, 'waiting' => $waiting, 'borrowed' => $borrowed))
             ->execute();
     }
 }

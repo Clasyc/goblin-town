@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-sm-2">
                             {% if reservation.status == constant('AppBundle\\Entity\\Reservations::ORDERING') %}
-                                <a href="{{ path('orders_create-after-reservation-order-form', {'id': reservation.fkBook.id}) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-book"></span></a>
+                                <a href="{{ path('orders_create-after-reservation-order-form', {'id': reservation.id}) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-book"></span></a>
                             {% endif %}
                             {% if reservation.status == constant('AppBundle\\Entity\\Reservations::RESERVED') or reservation.status == constant('AppBundle\\Entity\\Reservations::ORDERING') %}
                                 <form class="cancel-reservation-form" action="{{ path('orders_cancel-reservation') }}" name="orders_cancel-reservation" method="post">

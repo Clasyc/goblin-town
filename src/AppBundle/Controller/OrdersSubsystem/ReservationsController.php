@@ -89,7 +89,7 @@ class ReservationsController extends Controller
                 ->getRepository('AppBundle:Reservations')
                 ->refreshReservationsAfterCancel($reservation->getFkBook(), new \DateTime(), $queue);
 
-            $queue = $this->getDoctrine()
+         /*   $queue = $this->getDoctrine()
                 ->getEntityManager()
                 ->getRepository('AppBundle:Reservations')
                 ->countQueueNumber($reservation->getFkBook());
@@ -103,7 +103,7 @@ class ReservationsController extends Controller
                 $book->setOrdered(false);
                 $em->persist($book);
                 $em->flush();
-            }
+            }*/
 
             $this->addFlash(
                 'info',

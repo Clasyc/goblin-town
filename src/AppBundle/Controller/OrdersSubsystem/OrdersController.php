@@ -4,6 +4,7 @@ namespace AppBundle\Controller\OrdersSubsystem;
 
 use AppBundle\Entity\Depts;
 use AppBundle\Entity\Orders;
+use AppBundle\Entity\Reservations;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +60,35 @@ class OrdersController extends Controller
                         'success',
                         'Knyga sėkmingai užsakyta.'
                     );
+                }
+                else if ($request->request->get('reservation') > -1)
+                {
+                    $reservation = $this->getDoctrine()
+                        ->getRepository('AppBundle:Reservations')
+                        ->find($request->request->get('reservation'));
+
+                    $queue = $reservation->getQueue();
+                    $reservation->setStatus(Reservations::DONE);
+                    $reservation->setQueue(-1);
+
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($reservation);
+
+                    $book->setOrdered(true);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($order);
+                    $em->persist($book);
+                    $em->flush();
+
+                    $this->addFlash(
+                        'success',
+                        'Knyga sėkmingai užsakyta.'
+                    );
+
+                  /*  $this->getDoctrine()
+                        ->getEntityManager()
+                        ->getRepository('AppBundle:Reservations')
+                        ->refreshReservationsAfterSuccess($reservation->getFkBook(), new \DateTime(), $queue);*/
                 }
                 else
                 {
