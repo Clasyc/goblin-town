@@ -44,8 +44,13 @@
                     <li>
                         <a href="{{ path('orders_employee-reports-list') }}">Ataskaitos</a>
                     </li>
-                {% elseif is_granted('ROLE_BOOK_ADMIN') %}
-                    {#čia knygų admin funkcijos#}
+                {% elseif is_granted('ROLE_BOOKS_ADMIN') %}
+                    <li>
+                        <a href="{{ path('book_admins_books-list') }}">Knygos</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('book_admins_books-report-form') }}">Ataskaita</a>
+                    </li>
                 {% endif %}
             </ul>
 
@@ -56,6 +61,13 @@
                         {% if is_granted('ROLE_READER') %}
                             <li><a href="{{ path('readers_edit-profile') }}">Redaguoti profilį</a></li>
                         {% endif %}
+
+                        {% if is_granted('ROLE_BOOKS_ADMIN') %}
+                            <li><a href="{{ path('book_admins_books-list') }}">Knygų sąrašas</a></li>
+                            <li><a href="{{ path('book_admins_books-report-form') }}">Knygų ataskaita</a></li>
+                            <li><a href="{{ path('book_admins_book-add') }}">Pridėti knygą</a></li>
+                        {% endif %}
+
                         <li><a href="{{ path('fos_user_change_password') }}">Keisti slaptažodį</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ path('fos_user_security_logout') }}">Atsijungti</a></li>

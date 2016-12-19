@@ -4,6 +4,7 @@ security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
 
+    role_hierarchy:
 
     providers:
         fos_userbundle:
@@ -25,6 +26,11 @@ security:
 
     access_control:
              - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+             - { path: ^/booksAdmin, role: ROLE_BOOKS_ADMIN }
+
              - { path: ^/readers-admin, role: ROLE_READERS_ADMIN }
+
+             - { path: ^/reader, role: ROLE_READER }
              - { path: ^/reader, role: ROLE_READER }
              - { path: ^/employee, role: ROLE_EMPLOYEE }

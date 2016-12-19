@@ -12,6 +12,11 @@ services:
             arguments: ['@router', '@security.authorization_checker']
             tags:
                 - { name: kernel.event_subscriber }
+    app.form.books_administration:
+            class: AppBundle\Form\Type\BooksType
+            arguments: ['@doctrine.orm.entity_manager']
+            tags:
+                - { name: form.type }
     app_user.penalty_warning:
             class: AppBundle\Services\PenaltyWarning
             arguments: ['@security.token_storage', '@doctrine.orm.entity_manager']

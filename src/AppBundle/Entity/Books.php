@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Books
@@ -13,12 +14,21 @@ use Doctrine\ORM\Mapping as ORM;
 class Books
 {
 
+
     public function __construct()
     {
+
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
         $this->wishlists = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
     /**
      * @var string
+     *
+     **@Assert\NotBlank(
+     *     message = "Užpildykite šį lauką.",
+     *)
+     *
      *
      * @ORM\Column(name="isbn_code", type="string", length=13, nullable=false)
      */
@@ -27,6 +37,10 @@ class Books
     /**
      * @var string
      *
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Knygos pavadinimas negali būti ilgesnis nei 255 simboliai"
+     *)
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
@@ -113,6 +127,20 @@ class Books
 
 
     /**
+     * @ORM\OneToMany(targetEntity="Orders", mappedBy="fkBook", cascade={"persist"})
+     */
+    private $orders;
+
+
+    public function setOrders($order)
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+
+        }
+    }
+
+    /**
      * @ORM\OneToMany(targetEntity="Wishlists", mappedBy="fkBook", cascade={"remove"})
      */
     private $wishlists;
@@ -143,6 +171,13 @@ class Books
         return $this;
     }
 
+
+    public function getOrders()
+    {
+        return $this->orders;
+    }
+
+
     /**
      *  @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -152,11 +187,11 @@ class Books
     }
 
 
-
     /**
      * Set isbnCode
      *
      * @param string $isbnCode
+     *
      *
      * @return Books
      */

@@ -14,14 +14,12 @@ class Authors
 {
     /**
      * @var string
-     *
      * @ORM\Column(name="name", type="string", length=35, nullable=false)
      */
     private $name;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="last_name", type="string", length=50, nullable=false)
      */
     private $lastName;
@@ -144,6 +142,7 @@ class Authors
         return $this;
     }
 
+
     /**
      * Get birthDate
      *
@@ -187,4 +186,5 @@ class Authors
     {
         return $this->id;
     }
+
 }
