@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/book-order.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;&nbsp; SKAITYTOJAS</br>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin:5px;">
+                <div class="col-sm-2">
+                    Asmens kodas
+                </div>
+                <div class="col-sm-2">
+                    Vardas, Pavardė
+                </div>
+                <div class="col-sm-2">
+                    E-paštas
+                </div>
+                <div class="col-sm-2">
+                    Telefono Nr.
+                </div>
+                <div class="col-sm-2">
+                    Miestas
+                </div>
+                <div class="col-sm-2">
+                    Adresas
+                </div>
+            </div>
+            <div class="book-list-element">
+                <div class="row" style="margin:5px;">
+                    <div class="col-sm-2">
+                        {{ reader.personalId }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ reader.name }} {{ reader.lastName }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ reader.email }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ reader.phoneNumber }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ reader.city }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ reader.adress }}
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+{% endblock %}

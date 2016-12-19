@@ -109,13 +109,15 @@
                 <div class="order-list-element">
                     <div class="row">
                         <div class="col-sm-1">
-                            {{ order.id }}
+                            <a href="{{ path('orders_employee-get-order', {'id': order.id}) }}">{{ order.id }}</a>
                         </div>
                         <div class="col-sm-2">
-                            {{ order.fkReader.lastName }} {{ order.fkReader.name }}
+                            <a href="{{ path('orders_employee-get-reader', {'id': order.fkReader.personalId}) }}">
+                                {{ order.fkReader.lastName }} {{ order.fkReader.name }}
+                            </a>
                         </div>
                         <div class="col-sm-2">
-                            {{ order.fkBook.title }}
+                            <a href="{{ path('orders_employee-get-book', {'id': order.fkBook.id}) }}">{{ order.fkBook.title }}</a>
                         </div>
                         <div class="col-sm-2">
                             {{ order.takeDate|date('Y-m-d') }}

@@ -231,6 +231,26 @@ class ReaderController extends Controller
         }
     }
 
+    /**
+     * @Route("/employee/reader/{id}", name="orders_employee-get-reader")
+     */
+    public function getReaderFormAction($id)
+    {
+        $reader = $this->getDoctrine()
+            ->getRepository('AppBundle:Readers')
+            ->find($id);
+
+        if (empty($reader))
+        {
+            $this->addFlash(
+                'error',
+                'Skaitytojas nerastas.'
+            );
+            return $this->redirectToRoute('orders_employee-orders-list');
+        }
+
+        return $this->render('default/ROLE_employee/reader-info.html.twig', ['reader' => $reader]);
+    }
 
 
 
