@@ -103,4 +103,23 @@ class ReservationsRepository extends EntityRepository
             return  $result;
         }
     }
+
+    public function findReservationsByDateForReport($beginDate, $endDate, $query = false)
+    {
+        $result = $this->getEntityManager()
+            ->createQuery(
+                'SELECT r
+                 FROM AppBundle:Reservations r
+                 WHERE r.date >= :beginDate AND r.date <= :endDate
+                 ORDER BY r.date'
+            )->setParameters(array('endDate' => $endDate, 'beginDate' => $beginDate));
+        if (!$query)
+        {
+            return  $result->getResult();
+        }
+        else
+        {
+            return  $result;
+        }
+    }
 }
