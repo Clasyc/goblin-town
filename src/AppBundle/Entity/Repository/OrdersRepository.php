@@ -130,4 +130,25 @@ class OrdersRepository extends EntityRepository
             return $result;
         }
     }
+
+    public function findOrdersByDateAndReaderForReport($beginDate, $endDate, $reader, $query = false)
+    {
+        $result = $this->getEntityManager()
+            ->createQuery(
+                'SELECT o, r, b
+                 FROM AppBundle:Orders o 
+                 LEFT JOIN o.fkReader r 
+                 LEFT JOIN o.fkBook b
+                 WHERE o.takeDate >= :beginDate AND o.takeDate <= :endDate AND r.personalId = :reader
+                 ORDER BY o.takeDate DESC'
+            )->setParameters(array('beginDate' => $beginDate, 'endDate' => $endDate, 'reader' => $reader));
+        if(!$query)
+        {
+            return $result->getResult();
+        }
+        else
+        {
+            return $result;
+        }
+    }
 }
