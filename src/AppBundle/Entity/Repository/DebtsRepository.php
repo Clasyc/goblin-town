@@ -19,7 +19,7 @@ class DebtsRepository extends EntityRepository
                  LEFT JOIN d.fkOrder o
                  LEFT JOIN o.fkReader r
                  WHERE d.status = :unpaid
-                 ORDER BY r.personalId'
+                 ORDER BY r.personalId ASC'
             )->setParameter('unpaid', $unpaid);
         if(!$query)
         {
@@ -37,13 +37,13 @@ class DebtsRepository extends EntityRepository
 
         $result = $this->getEntityManager()
             ->createQuery(
-                'SELECT d, o, r, SUM(d.amount) as s
+                'SELECT d, SUM(d.amount) as s
                  FROM AppBundle:Depts d
                  LEFT JOIN d.fkOrder o
                  LEFT JOIN o.fkReader r
+                 WHERE (d.status = :unpaid)
                  GROUP BY r.personalId
-                 HAVING (d.status = :unpaid)
-                 ORDER BY r.personalId'
+                 ORDER BY r.personalId ASC'
             )->setParameter('unpaid', $unpaid);
         if(!$query)
         {

@@ -14,6 +14,16 @@
 {% endblock %}
 
 {% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert-success text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
     <div class="panel panel-library">
         <div class="panel-heading">
             <div class="row">
@@ -66,6 +76,15 @@
                 </div>
             </div>
             <hr>
+            {% if debt.status == constant('AppBundle\\Entity\\Depts::UNPAID') %}
+                <form action="{{ path('orders_employee-debt-payment') }}" name="orders_pay-debt" method="post">
+                    {% if csrf_token %}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                    {% endif %}
+                    <input type="hidden" name="id" value="{{ debt.id }}"/>
+                    <button type="submit" name="_submit" id="_submit" class="btn btn-primary">Skolos apmokėjimas</button>
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

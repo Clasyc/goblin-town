@@ -159,7 +159,7 @@ class OrdersController extends Controller
             if ($status == Orders::BORROWED)
             {
                 $order->setStatus($status);
-
+                $order->setFkEmploye($this->getEmployee());
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($order);
                 $em->flush();
@@ -175,6 +175,7 @@ class OrdersController extends Controller
                     ->getRepository('AppBundle:Books')
                     ->find($request->request->get('book'));
                 $order->setStatus($status);
+                $order->setFkEmploye($this->getEmployee());
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($order);
@@ -310,5 +311,14 @@ class OrdersController extends Controller
         $reader = $em->getRepository("AppBundle:Readers")->findReaderByFosUser($user->getId());
 
         return $reader->getPersonalId();
+    }
+
+    private function getEmployee()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $employee = $em->getRepository("AppBundle:Employees")->findEmployeeByFosUser($user->getId());
+
+        return $employee;
     }
 }
