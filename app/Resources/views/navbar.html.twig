@@ -14,12 +14,39 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="{{ path('readers_books-list') }}">Knygos</a>
-                </li>
-                <li>
-                    <a href="{{ path('readers_wishlist') }}">Norų sąrašas</a>
-                </li>
+                {% if is_granted('ROLE_READERS_ADMIN') %}
+                    <li>
+                        <a href="{{ path('readers-admin_readers-list') }}">Skaitytojai</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('readers-admin_report') }}">Skaitytojų ataskaita</a>
+                    </li>
+                {% elseif is_granted('ROLE_READER') %}
+                    <li>
+                        <a href="{{ path('readers_books-list') }}">Knygos</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('readers_wishlist') }}">Norų sąrašas</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('readers_history-list') }}">Užsakymų istorija</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('readers_report') }}">Pomėgių ataskaita</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('orders_reader-reservations-list') }}">Mano rezervacijos</a>
+                    </li>
+                {% elseif is_granted('ROLE_EMPLOYEE') %}
+                    <li>
+                        <a href="{{ path('orders_employee-orders-list') }}">Užsakymai</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('orders_employee-reports-list') }}">Ataskaitos</a>
+                    </li>
+                {% elseif is_granted('ROLE_BOOK_ADMIN') %}
+                    {#čia knygų admin funkcijos#}
+                {% endif %}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

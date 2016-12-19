@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/book-order.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-library">
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="alert alert-danger">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; UŽSAKYMAS (Nr. {{ order.id }}) </br>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin:5px;">
+                <div class="col-sm-2">
+                    Skaitytojas
+                </div>
+                <div class="col-sm-2">
+                    Knyga
+                </div>
+                <div class="col-sm-2">
+                    Knygos ISBN
+                </div>
+                <div class="col-sm-2">
+                    Paėmimo data
+                </div>
+                <div class="col-sm-1">
+                    Išduota iki
+                </div>
+                <div class="col-sm-2">
+                    Kada grąžinta
+                </div>
+                <div class="col-sm-1">
+                    Būsena
+                </div>
+            </div>
+            <div class="book-list-element">
+                <div class="row" style="margin:5px;">
+                    <div class="col-sm-2">
+                        {{ order.fkReader.lastName }} {{ order.fkReader.name }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ order.fkBook.title }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ order.fkBook.isbnCode }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ order.takeDate|date('Y-m-d') }}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ order.agreedReturnDate|date('Y-m-d') }}
+                    </div>
+                    <div class="col-sm-2">
+                        {% if order.actualReturnDate != null %}
+                            {{ order.actualReturnDate|date('Y-m-d') }}
+                        {% else %}
+                            negrąžinta
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ order.status }}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% if order.status == constant('AppBundle\\Entity\\Orders::BORROWED') %}
+                <form action="{{ path('orders_employee-return-book', {'id': order.id}) }}" name="orders_return-book" method="post">
+                    {% if csrf_token %}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                    {% endif %}
+                    <button type="submit" name="_submit" id="_submit" class="btn btn-primary">Knygos grąžinimas</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

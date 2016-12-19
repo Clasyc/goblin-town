@@ -5,11 +5,9 @@ $('a.wishlist-toggle-btn').confirm({
     buttons: {
         Taip: function(){
             location.href = this.$target.attr('href');
-            this.$target.parent().parent().parent().slideUp('slow', function(){ $target.remove(); });
+            this.$target.parent().parent().parent().slideUp('slow', function(){});
         },
         Ne: function(){
-
         }
-
     }
 });

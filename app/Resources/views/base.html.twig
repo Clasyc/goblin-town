@@ -13,9 +13,11 @@
 
     {% block stylesheets %}
         {% stylesheets
+        '@AppBundle/Resources/public/css/loader.css'
         '@AppBundle/Resources/public/css/bootstrap.min.css'
         '@AppBundle/Resources/public/css/style.css'
         '@AppBundle/Resources/public/css/jquery-confirm.css'
+        '@AppBundle/Resources/public/css/datepicker.css'
         %}
 
         <link rel="stylesheet" href="{{ asset_url }}"  />
@@ -28,7 +30,11 @@
 
 <body>
 
+<div class="loader"></div>
+
+
 {% include 'navbar.html.twig' %}
+
 
 <!-- Page Content -->
 <div class="container">
@@ -36,13 +42,43 @@
     <div class="row">
 
         <div class="col-md-3">
-            <p class="lead">Shop Name</p>
+
+            {% if is_granted('ROLE_READERS_ADMIN') %}
+                <p class="lead">Skaitytojų administratorius</p>
+            {% elseif is_granted('ROLE_READER') %}
+                <p class="lead">Skaitytojas</p>
+            {% elseif is_granted('ROLE_EMPLOYEE') %}
+                <p class="lead">Darbuotojas</p>
+            {% elseif is_granted('ROLE_BOOK_ADMIN') %}
+                <p class="lead">Knygų administratorius</p>
+            {% endif %}
+
+            {% if is_granted('ROLE_READER') %}
+                {%  if penalty.is_active %}
+                    <div class="alert alert-danger">
+                        <span class="glyphicon glyphicon-hand-right"></span>
+                        <strong>Turite nuobaudą!</strong> Negalėsite pasiimti naujos knygos. <br>
+                        <hr>
+                        <strong>Data:</strong> {{ penalty.info.getPenaltyBeginDate()|date("Y-m-d H:m") }} - {{ penalty.info.getPenaltyEndDate()|date("Y-m-d") }}
+                        <strong>Komentaras:</strong> {{ penalty.info.comment }}
+                        <hr>
+                        {{ penalty.info.fkReadersAdmin.name }} {{ penalty.info.fkReadersAdmin.lastName }}
+                    </div>
+                {% endif %}
+            {% endif %}
+
             <div class="list-group">
-                {#mano atliktų užsakymų sąrašas (turbūt bus visa užsakymų istorija)#}
-                <a href="#" class="list-group-item">Mano užsakymai</a>
-                {#čia atsiras užsakymai vienai dienai, tų knygų, kurių laukei eilėje#}
-                <a href="#" class="list-group-item">Mano rezervacijos</a>
-                <a href="https://img1.etsystatic.com/043/0/7345444/il_fullxfull.627295397_slwh.jpg" class="list-group-item">Martyno Batai</a>
+                {% if is_granted('ROLE_READERS_ADMIN') %}
+                    <a href="#" class="list-group-item">Skaitytojų admino funkcija 1</a>
+                    <a href="#" class="list-group-item">Skaitytojų admino funkcija 2</a>
+                {% elseif is_granted('ROLE_READER') %}
+                    <a href="#" class="list-group-item">Skaitytojo funkcija 1</a>
+                    <a href="#" class="list-group-item">Skaitytojo funkcija 2</a>
+                {% elseif is_granted('ROLE_EMPLOYEE') %}
+                {% elseif is_granted('ROLE_BOOK_ADMIN') %}
+                    <a href="#" class="list-group-item">Knygų admino funkcija 1</a>
+                    <a href="#" class="list-group-item">Knygų admino funkcija 2</a>
+                {% endif %}
             </div>
         </div>
 
@@ -87,6 +123,7 @@
     '@AppBundle/Resources/public/js/jquery.min.js'
     '@AppBundle/Resources/public/js/bootstrap.min.js'
     '@AppBundle/Resources/public/js/jquery-confirm.js'
+    '@AppBundle/Resources/public/js/datepicker.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

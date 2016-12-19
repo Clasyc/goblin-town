@@ -32,3 +32,5 @@ security:
              - { path: ^/readers-admin, role: ROLE_READERS_ADMIN }
 
              - { path: ^/reader, role: ROLE_READER }
+             - { path: ^/reader, role: ROLE_READER }
+             - { path: ^/employee, role: ROLE_EMPLOYEE }

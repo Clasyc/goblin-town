@@ -21,7 +21,7 @@ class ReadersRepository extends  EntityRepository
     public function findAllReaders($query = false){
         $result = $this->getEntityManager()
             ->createQuery(
-                'SELECT r, fos FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos'
+                'SELECT r, fos, p FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos LEFT JOIN r.penalty p'
             );
         if(!$query){
             return  $result->getResult();
@@ -34,17 +34,21 @@ class ReadersRepository extends  EntityRepository
     public function findReader($id){
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT r, fos FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos WHERE r.personalId = :id'
+                'SELECT r, fos, p FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos LEFT JOIN r.penalty p WHERE r.personalId = :id'
             )->setParameter("id", $id)
             ->getResult()[0];
     }
 
     public function findReaderByFosUser($id){
-        return $this->getEntityManager()
+        $result = $this->getEntityManager()
             ->createQuery(
                 'SELECT r, fos FROM AppBundle:Readers r LEFT JOIN r.fkFosuser fos WHERE fos.id = :id'
             )->setParameter("id", $id)
-            ->getResult()[0];
+            ->getResult();
+
+        if(!empty($result[0]))
+            return $result[0];
+        return null;
     }
 
     public function isBookAlreadyOrderedByReader($userId, $bookId)
@@ -71,13 +75,15 @@ class ReadersRepository extends  EntityRepository
 
     public function isBookAlreadyReservedByReader($userId, $bookId)
     {
-        $cancelled = Reservations::CANCELLED;
+        $ordering = Reservations::ORDERING;
+        $reserved = Reservations::RESERVED;
+
         $value = $this->getEntityManager()
             ->createQuery(
                 'SELECT COUNT(r.id)
                  FROM AppBundle:Reservations r
-                 WHERE r.fkReader = :userId AND r.status != :cancelled AND r.fkBook = :bookId'
-            )->setParameters(array('userId' => $userId, 'bookId' => $bookId, 'cancelled' => $cancelled))
+                 WHERE r.fkReader = :userId AND (r.status = :ordering OR r.status = :reserved) AND r.fkBook = :bookId'
+            )->setParameters(array('userId' => $userId, 'bookId' => $bookId, 'reserved' => $reserved, 'ordering' => $ordering))
             ->getResult()[0];
 
         if ($value[1] > 0)
@@ -89,4 +95,19 @@ class ReadersRepository extends  EntityRepository
             return false;
         }
     }
+
+    public function findReadersRegistrationCountsForReport($beginDate, $endDate)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT r, partial f.{id, registrationDate}, COUNT(r) AS cnt
+                 FROM AppBundle:Readers r
+                 LEFT JOIN r.fkFosuser f
+                 WHERE f.registrationDate >= :beginDate AND f.registrationDate <= :endDate GROUP BY f.registrationDate ORDER BY f.registrationDate'
+            )
+            ->setParameter("beginDate", $beginDate)
+            ->setParameter("endDate", $endDate)
+            ->getResult();
+    }
+
 }

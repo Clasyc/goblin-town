@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    {% stylesheets
+    '@AppBundle/Resources/public/css/readers/books-list.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+    {% if dates is defined %}
+        <script>
+            new Morris.Line({
+                // ID of the element in which to draw the chart.
+                element: 'myfirstchart',
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: [
+                    {% for date in dates %}
+                    {date: "{{ date['date'] }}", value: {{ date['value'] }} },
+                    {% endfor %}
+                ],
+                // The name of the data record attribute that contains x-values.
+                xkey: 'date',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['value'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['Value'],
+                yLabelFormat: function (y) {
+                    return y != Math.round(y) ? '' : y;
+                },
+                smooth: false,
+            });
+        </script>
+    {% endif %}
+    {% javascripts
+    '@AppBundle/Resources/public/js/reports/report.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+
+{% block body %}
+    <div class="panel panel-library">
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="alert alert-danger">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; SKAITYTOJŲ ATASKAITA
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="report-date">
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="row">
+                            <form method="POST">
+                                <div class="col-sm-5">
+                                    <input type="date" class="form-control" name="beginDate" id="beginDate">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="date" class="form-control" name="endDate" id="endDate">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="submit" name="submit" value="Rodyti ataskaitą" class="btn btn-primary">
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="report-body">
+
+                {% if bd is defined and ed is defined %}
+                    <div class="row" style="margin-top:20px;">
+                        <div class="text-center">
+                            <b>Užsiregistravusių skaitytojų skaičius per dieną: {{ bd }} - {{ ed }}</b>
+                        </div>
+                    </div>
+                    <div id="myfirstchart" style="height: 250px;"></div>
+                {% endif %}
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}
+
+
+

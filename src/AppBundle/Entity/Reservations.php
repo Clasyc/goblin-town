@@ -12,9 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Reservations
 {
-    const RESERVED = "reserved";
-    const CANCELLED = "cancelled";
-    const ORDERING = "ordering";
+    const RESERVED = "rezervuota";
+    const CANCELLED = "atšaukta";
+    const ORDERING = "užsakymas";
+    const DONE = "baigta";
+
     /**
      * @var \DateTime
      *

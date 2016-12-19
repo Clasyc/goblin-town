@@ -17,3 +17,6 @@ services:
             arguments: ['@doctrine.orm.entity_manager']
             tags:
                 - { name: form.type }
+    app_user.penalty_warning:
+            class: AppBundle\Services\PenaltyWarning
+            arguments: ['@security.token_storage', '@doctrine.orm.entity_manager']

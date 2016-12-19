@@ -15,11 +15,6 @@
 
 {% block body %}
     <div class="panel panel-library">
-        <div class="panel-heading">
-            <div class="row">
-                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; UŽSAKYMAS </br>
-            </div>
-        </div>
         {% for flashMessage in app.session.flashbag.get('success') %}
             <div class="alert alert-success">
                 {{ flashMessage }}
@@ -30,6 +25,11 @@
                 {{ flashMessage }}
             </div>
         {% endfor %}
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;&nbsp; UŽSAKYMAS </br>
+            </div>
+        </div>
         <div class="panel-body">
             <div class="row" style="margin:5px;">
                 <div class="col-sm-2">
@@ -95,6 +95,7 @@
                         </select>
                     </div>
                 </div>
+                <input type="hidden" name="reservation" value="{{ reservation }}" />
                 <button type="submit" name="_submit" id="_submit" class="btn btn-primary">Užsakyti</button>
             </form>
         </div>

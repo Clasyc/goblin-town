@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/employees/orders-list.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    '@AppBundle/Resources/public/js/reports/report.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert-success text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-file"></span> REZERVACIJŲ ATASKAITA
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="report-date">
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <form action="{{ path('orders_employee-reservations-report') }}" method="POST">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Datos intervalas:</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="date" class="form-control" name="beginDate" id="beginDate">
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="date" class="form-control" name="endDate" id="endDate">
+                                </div>
+                            </div><br><br>
+                            <div class="row">
+                                <div class="col-sm-offset-4 col-sm-4">
+                                    <input type="submit" name="submit" value="Generuoti ataskaitą" class="btn btn-primary">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% if bd is defined and ed is defined %}
+                <div class="row" style="margin-top:30px;">
+                    <div class="text-center">
+                        <b>Datos intervalas: {{ bd }} - {{ ed }}</b><br>
+                    </div>
+                </div>
+            {% endif %}
+            {% if reservations is defined %}
+                <div class="row" style="margin-top:10px;">
+                    <h3 class="text-center">Rezervacijų skaičius: {{ reservations|length }}</h3>
+                </div>
+                <hr>
+                <div class="row" style="margin:20px;">
+                    <div class="col-sm-1">
+                        ID
+                    </div>
+                    <div class="col-sm-2">
+                        Data
+                    </div>
+                    <div class="col-sm-1">
+                        Vieta eilėje
+                    </div>
+                    <div class="col-sm-2">
+                        Eilė pajudėjo
+                    </div>
+                    <div class="col-sm-1">
+                        Būsena
+                    </div>
+                    <div class="col-sm-2">
+                        Skaitytojas
+                    </div>
+                    <div class="col-sm-3">
+                        Knyga
+                    </div>
+                </div>
+                {% for reservation in reservations %}
+                    <div class="order-list-element">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                {{ reservation.id }}
+                            </div>
+                            <div class="col-sm-2">
+                                {{ reservation.date|date('Y-m-d') }}
+                            </div>
+                            <div class="col-sm-1">
+                                {% if reservation.queue < 0 %}
+                                    -
+                                {% else %}
+                                    {{ reservation.queue }}
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-2">
+                                {{ reservation.queueMoved|date('Y-m-d') }}
+                            </div>
+                            <div class="col-sm-1">
+                                {{ reservation.status }}
+                            </div>
+                            <div class="col-sm-2">
+                                <a href="{{ path('orders_employee-get-reader', {'id': reservation.fkReader.personalId}) }}">
+                                    {{ reservation.fkReader.lastName }} {{ reservation.fkReader.name }}
+                                </a>
+                            </div>
+                            <div class="col-sm-3">
+                                <a href="{{ path('orders_employee-get-book', {'id': reservation.fkBook.id}) }}">{{ reservation.fkBook.title }}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+{% endblock %}
