@@ -19,11 +19,18 @@
 
 {% block body %}
     <div class="panel panel-library">
+
+        <div class="panel panel-default">
+            <div class="panel-heading" style="text-align: left"><strong>Paieška</strong></div>
+            <div class="panel-body" style="text-align: left"> {{ form(searchForm) }}</div>
+        </div>
+
         <div class="panel-heading">
             <div class="row">
                 <span class="glyphicon glyphicon-book"></span> KNYGOS
             </div>
         </div>
+
         <div class="panel-body">
             <div class="row" style="margin:5px;">
                 <div class="col-sm-1">
@@ -83,8 +90,8 @@
 
 
         <div class="panel-footer">
-            <div style="text-align: right">
-                <a href={{ path('book_admins_book-add') }}  class="btn btn-xs btn-primary">Pridėti naują knygą</a>
+            <div style="text-align: center">
+                <a href={{ path('book_admins_book-add') }}  class="btn btn-bg btn-primary">Pridėti naują knygą</a>
             </div>
             <div class="navigation">
                 {{ knp_pagination_render(pagination) }}

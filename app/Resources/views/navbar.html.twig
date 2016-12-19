@@ -44,8 +44,13 @@
                     <li>
                         <a href="{{ path('orders_employee-reports-list') }}">Ataskaitos</a>
                     </li>
-                {% elseif is_granted('ROLE_BOOK_ADMIN') %}
-                    {#čia knygų admin funkcijos#}
+                {% elseif is_granted('ROLE_BOOKS_ADMIN') %}
+                    <li>
+                        <a href="{{ path('book_admins_books-list') }}">Knygos</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('book_admins_books-report-form') }}">Ataskaita</a>
+                    </li>
                 {% endif %}
             </ul>
 

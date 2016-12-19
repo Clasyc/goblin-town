@@ -19,7 +19,6 @@ class BooksOrderReportController extends Controller
      */
     public function orderedBooksAction(Request $request, $page = 1)
     {
-
         $defaultData = array('message' => 'Type your message here');
         $form = $this->createFormBuilder($defaultData)
             ->add('startDate', DateType::class, array(

@@ -12,12 +12,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-
-    {% javascripts
-    '@AppBundle/Resources/public/js/booksAdmins/predefined-dates.js'
-    %}
+    {% javascripts %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
+    {% endjavascripts %}
 {% endblock %}
 
 

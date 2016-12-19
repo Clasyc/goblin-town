@@ -142,4 +142,29 @@ class BooksRepository extends  EntityRepository
             ->execute();
     }
 
+    // @param $query - false: returns result as objects,
+    //                  true: returns result as SQL builder query
+    public function findSearchedBooks($query = false, $searchTerm){
+        $result = $this->getEntityManager()
+            ->createQuery(
+                'SELECT b, p, l, g, a 
+                  FROM AppBundle:Books b 
+                  LEFT JOIN b.fkPublisher p 
+                  LEFT JOIN b.fkLanguage l 
+                  LEFT JOIN b.fkGenre g 
+                  LEFT JOIN b.fkAuthor a
+                  WHERE b.title LIKE :searchTerm
+                  OR p.name LIKE :searchTerm
+                  OR a.name LIKE :searchTerm
+                  OR a.lastName LIKE :searchTerm
+                  OR b.isbnCode LIKE :searchTerm')
+            ->setParameter('searchTerm',$searchTerm);
+        if(!$query){
+            return  $result->getResult();
+        }else{
+            return  $result;
+        }
+
+    }
+
 }

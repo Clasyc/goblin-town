@@ -14,7 +14,7 @@ class BooksInventoryController extends Controller
 {
 
     /**
-    * @Route("/booksAdmin/books-list/{page}", name="book_admins_books-list")
+    * @Route("/booksAdmin/books-list5/{page}", name="book_admins_books-list")
     */
     public function booksListAction($page = 1)
     {
