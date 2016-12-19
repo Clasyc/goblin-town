@@ -38,7 +38,12 @@
                         <a href="{{ path('orders_reader-reservations-list') }}">Mano rezervacijos</a>
                     </li>
                 {% elseif is_granted('ROLE_EMPLOYEE') %}
-                    {#čia darbuotojo funkcijos#}
+                    <li>
+                        <a href="{{ path('orders_employee-orders-list') }}">Užsakymai</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('orders_employee-reports-list') }}">Ataskaitos</a>
+                    </li>
                 {% elseif is_granted('ROLE_BOOK_ADMIN') %}
                     {#čia knygų admin funkcijos#}
                 {% endif %}

@@ -86,6 +86,27 @@ class BooksController extends Controller
         return $this->render('default/ROLE_reader/book-order.html.twig', array('book' => $book, 'reservation' => $reservation->getId(), 'csrf_token' => $csrfToken));
     }
 
+    /**
+     * @Route("/employee/book/{id}", name="orders_employee-get-book")
+     */
+    public function getBookFormAction($id)
+    {
+        $book = $this->getDoctrine()
+            ->getRepository('AppBundle:Books')
+            ->find($id);
+
+        if (empty($book))
+        {
+            $this->addFlash(
+                'error',
+                'Knyga nerasta.'
+            );
+            return $this->redirectToRoute('orders_employee-orders-list');
+        }
+
+        return $this->render('default/ROLE_employee/book-info.html.twig', ['book' => $book]);
+    }
+
     private function isBookRelatedWithReader($readerId, $bookId)
     {
         $em = $this->getDoctrine()->getEntityManager();

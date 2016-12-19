@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    '@AppBundle/Resources/public/css/employees/orders-list.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert-success text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger text-center">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <div class="panel panel-library">
+        <div class="panel-heading">
+            <div class="row">
+                <span class="glyphicon glyphicon-file"></span> SKOLININKŲ ATASKAITA
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <form action="{{ path('orders_employee-debtors-report') }}" method="POST">
+                        <div class="row">
+                            <div class="col-sm-offset-4 col-sm-4">
+                                <input type="submit" name="submit" value="Generuoti ataskaitą" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% if debts is defined %}
+                <div class="row" style="margin-top:10px;">
+                    <h3 class="text-center">Neapmokėtų skolų skaičius: {{ debts|length }}</h3>
+                </div>
+                <hr>
+                <div class="row" style="margin:20px;">
+                    <div class="col-sm-2">
+                        ID
+                    </div>
+                    <div class="col-sm-3">
+                        Skaitytojas
+                    </div>
+                    <div class="col-sm-3">
+                        Užsakymo Nr.
+                    </div>
+                    <div class="col-sm-2">
+                        Skolos kiekis
+                    </div>
+                    <div class="col-sm-2">
+                        Būsena
+                    </div>
+                </div>
+                {% for debt in debts%}
+                    {% if reader is defined and reader != debt.fkOrder.fkReader %}
+                        {% if count is not defined %}
+                            {% set count = 0 %}
+                        {% endif %}
+                        <div class="order-list-element">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <b>Vardas Pavardė:</b>
+                                </div>
+                                <div class="col-sm-3">
+                                    <b>{{ reader.name }} {{ reader.lastName }}</b>
+                                </div>
+                                <div class="col-sm-3 col-sm-offset-3">
+                                    <b>Iš viso: {{ debtsSum[count].s }} &euro;</b>
+                                </div>
+                            </div>
+                        </div>
+                        {% set count = count + 1 %}
+                    {% endif %}
+                    <div class="order-list-element">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <a href="{{ path('orders_employee-get-debt', {'id': debt.id}) }}">{{ debt.id }}</a>
+                            </div>
+                            <div class="col-sm-3">
+                                <a href="{{ path('orders_employee-get-reader', {'id': debt.fkOrder.fkReader.personalId}) }}">
+                                    {{ debt.fkOrder.fkReader.name }} {{ debt.fkOrder.fkReader.lastName }}
+                                </a>
+                            </div>
+                            <div class="col-sm-3">
+                                <a href="{{ path('orders_employee-get-order', {'id': debt.fkOrder.id}) }}">{{ debt.fkOrder.id }}</a>
+                            </div>
+                            <div class="col-sm-2">
+                                {{ debt.amount }} &euro;
+                            </div>
+                            <div class="col-sm-2">
+                                {{ debt.status }}
+                            </div>
+                        </div>
+                    </div>
+                    {% set reader = debt.fkOrder.fkReader %}
+                {% endfor %}
+                <div class="order-list-element">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <b>Vardas Pavardė:</b>
+                        </div>
+                        <div class="col-sm-3">
+                            <b>{{ debts|last.fkOrder.fkReader.name }} {{ debts|last.fkOrder.fkReader.lastName }}</b>
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-3">
+                            <b>Iš viso: {{ debtsSum|last.s }} &euro;</b>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+{% endblock %}
