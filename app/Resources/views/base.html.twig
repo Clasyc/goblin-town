@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Shop Item - Start Bootstrap Template</title>
+    <title>Bibliotekų Informacinė Sistema</title>
 
     {% block stylesheets %}
         {% stylesheets
@@ -37,7 +37,7 @@
 
 
 <!-- Page Content -->
-<div class="container">
+<div class="container body-container">
 
     <div class="row">
 
@@ -66,20 +66,6 @@
                     </div>
                 {% endif %}
             {% endif %}
-
-            <div class="list-group">
-                {% if is_granted('ROLE_READERS_ADMIN') %}
-                    <a href="#" class="list-group-item">Skaitytojų admino funkcija 1</a>
-                    <a href="#" class="list-group-item">Skaitytojų admino funkcija 2</a>
-                {% elseif is_granted('ROLE_READER') %}
-                    <a href="#" class="list-group-item">Skaitytojo funkcija 1</a>
-                    <a href="#" class="list-group-item">Skaitytojo funkcija 2</a>
-                {% elseif is_granted('ROLE_EMPLOYEE') %}
-                {% elseif is_granted('ROLE_BOOKS_ADMIN') %}
-                    <a href="#" class="list-group-item">Knygų admino funkcija 1</a>
-                    <a href="#" class="list-group-item">Knygų admino funkcija 2</a>
-                {% endif %}
-            </div>
         </div>
 
         <div class="col-md-9">
@@ -107,7 +93,7 @@
 </div>
 <!-- /.container -->
 
-<div class="container">
+<div class="container footer-container">
 
     <hr>
     {% include 'footer.html.twig' %}
