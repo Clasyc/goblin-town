@@ -151,4 +151,25 @@ class OrdersRepository extends EntityRepository
             return $result;
         }
     }
+
+    public function isOrdered($query = false, $orderId)
+    {
+        $result = $this->getEntityManager()
+            ->createQuery(
+                'SELECT o, r, e, b
+                 FROM AppBundle:Orders o 
+                 LEFT JOIN o.fkReader r 
+                 LEFT JOIN o.fkEmploye e 
+                 LEFT JOIN o.fkBook b
+                 WHERE o.fkBook = :id'
+            )->setParameter('id', $orderId);
+        if(!$query)
+        {
+            return  $result->getResult();
+        }
+        else
+        {
+            return  $result;
+        }
+    }
 }

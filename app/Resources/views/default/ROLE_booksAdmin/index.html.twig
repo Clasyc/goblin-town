@@ -20,6 +20,8 @@
 {% block body %}
     <div class="panel panel-library">
 
+
+
         <div class="panel panel-default">
             <div class="panel-heading" style="text-align: left"><strong>Paieška</strong></div>
             <div class="panel-body" style="text-align: left"> {{ form(searchForm) }}</div>
@@ -30,6 +32,14 @@
                 <span class="glyphicon glyphicon-book"></span> KNYGOS
             </div>
         </div>
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger" style="text-align: center">{{ flashMessage }}</div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success" style="text-align: center">{{ flashMessage }}</div>
+        {% endfor %}
 
         <div class="panel-body">
             <div class="row" style="margin:5px;">
@@ -77,7 +87,6 @@
                             {{ book.fkLanguage.language }}
                         </div>
                         <div class="col-md-2">
-
                             <a href={{ path('book_admins_book-edit', { 'bookId' : book.id } ) }} class="btn btn-sm btn-success"><span class="glyphicon glyphicon-pencil"></span></a>
                             <a href={{ path('book-delete', { 'bookId' : book.id } ) }}  class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                             <a href={{ path('book_admins_books-view', { 'bookId' : book.id } ) }} class="btn btn-sm btn-info"><span class="glyphicon glyphicon-info-sign"></span></a>

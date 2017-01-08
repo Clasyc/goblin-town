@@ -21,14 +21,23 @@ class BooksAdministrationController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
         $book = $em->getRepository("AppBundle:Books")->find($bookId);
+        $orders = $em->getRepository("AppBundle:Orders")->isOrdered(false, $bookId);
 
-        $em->remove($book);
-        $em->flush();
+        if(empty($orders)) {
+            $em->remove($book);
+            $em->flush();
+            $this->addFlash(
+                'success',
+                'Knyga ištrinta'
+            );
+        }
+        else{
+            $this->addFlash(
+                'notice',
+                'Knyga yra rezervuota!'
+            );
+        }
 
-        $this->addFlash(
-            'notice',
-            'Knyga istrinta'
-        );
 
         return $this->redirectToRoute('book_admins-list-search');
     }

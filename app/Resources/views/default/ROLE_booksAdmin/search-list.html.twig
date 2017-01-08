@@ -26,6 +26,15 @@
                 <span class="glyphicon glyphicon-book"></span> KNYGŲ ATASKAITA
             </div>
         </div>
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger" style="text-align: center">{{ flashMessage }}</div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success" style="text-align: center">{{ flashMessage }}</div>
+        {% endfor %}
+
         <div class="panel-body">
             <div class="row" style="margin:5px;">
                 <div class="col-sm-1">
@@ -72,9 +81,9 @@
                             {{ book.fkLanguage.language }}
                         </div>
                         <div class="col-md-2">
-                            <a href={{ path('book_admins_book-edit', { 'bookId' : book.id } ) }} class="btn btn-xs btn-success">Redaguoti</a>
-                            <a href={{ path('book-delete', { 'bookId' : book.id } ) }}  class="btn btn-xs btn-danger">Trinti</a>
-                            <a href={{ path('book_admins_books-view', { 'bookId' : book.id } ) }} class="btn btn-xs btn-info">Plačiau</a>
+                            <a href={{ path('book_admins_book-edit', { 'bookId' : book.id } ) }} class="btn btn-sm btn-success"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href={{ path('book-delete', { 'bookId' : book.id } ) }}  class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                            <a href={{ path('book_admins_books-view', { 'bookId' : book.id } ) }} class="btn btn-sm btn-info"><span class="glyphicon glyphicon-info-sign"></span></a>
                         </div>
                     </div>
                 </div>
