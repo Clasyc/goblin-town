@@ -28,8 +28,11 @@ class ReaderController extends Controller
 
 
         if(!empty($request->request->all())){
-            $filters = $request->request->all();
-            $books = $em->getRepository("AppBundle:Books")->findAllBooksByFilters($filters, true);
+                $filters = $request->request->all();
+                $books = $em->getRepository("AppBundle:Books")->findAllBooksByFilters($filters, true);
+                $request->getSession()->set("filters", $filters);
+        }else if(!empty($request->getSession()->get("filters"))){
+            $books = $em->getRepository("AppBundle:Books")->findAllBooksByFilters($request->getSession()->get("filters"), true);
         }else{
             $books = $em->getRepository("AppBundle:Books")->findAllBooks(true);
         }
