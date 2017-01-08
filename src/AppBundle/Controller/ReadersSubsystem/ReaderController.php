@@ -15,7 +15,7 @@ class ReaderController extends Controller
     /**
      * @Route("/reader/books-list/{page}", name="readers_books-list")
      */
-    public function booksListAction($page = 1)
+    public function booksListAction(Request $request, $page = 1)
     {
         $items_per_page = 25;
 
@@ -26,7 +26,13 @@ class ReaderController extends Controller
         $outdatedReservationsBooks = $em->getRepository('AppBundle:Books')->getOutdatedReservationsBooksIds();
         $em->getRepository('AppBundle:Books')->checkBookReservations($outdatedReservationsBooks);
 
-        $books = $em->getRepository("AppBundle:Books")->findAllBooks(true);
+
+        if(!empty($request->request->all())){
+            $filters = $request->request->all();
+            $books = $em->getRepository("AppBundle:Books")->findAllBooksByFilters($filters, true);
+        }else{
+            $books = $em->getRepository("AppBundle:Books")->findAllBooks(true);
+        }
 
         $wishlist = $em->getRepository("AppBundle:Books")->findBooksInWishlist($this->getReaderId(), true);
 
@@ -43,6 +49,8 @@ class ReaderController extends Controller
             $items_per_page/*limit per page*/
         );
 
+
+
         foreach ($pagination as $book) {
             foreach ($wishlist_books as $w_book) {
                 if ($book->getId() == $w_book->getId()) {
@@ -50,6 +58,7 @@ class ReaderController extends Controller
                 }
             }
         }
+
 
         return $this->render('default/ROLE_reader/index.html.twig', [
             "pagination" => $pagination

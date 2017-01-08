@@ -1,0 +1,15 @@
+form {
+    margin-top: 30px;
+}
+
+.condition-label label {
+    float: right;
+    margin-top: 5px;
+}
+
+#_submit {
+    display: block;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}

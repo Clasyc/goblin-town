@@ -167,4 +167,47 @@ class BooksRepository extends  EntityRepository
 
     }
 
+    public function findAllBooksByFilters($filters, $query = false){
+        $result = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select(array("b", "p", "l", "g", "a"))
+            ->from("AppBundle:Books", "b")
+            ->leftJoin("b.fkPublisher", "p")
+            ->leftJoin("b.fkLanguage", "l")
+            ->leftJoin("b.fkGenre", "g")
+            ->leftJoin("b.fkAuthor", "a");
+        if(isset($filters['title'])){
+            $title = $filters['title'];
+            $result->andWhere("b.title LIKE :title")
+                ->setParameter("title", $title.'%');
+        }
+
+        if(isset($filters['languages'])){
+            $languages = $filters['languages'];
+            $result->andWhere("l.id IN (:languages)")
+                ->setParameter("languages", $languages);
+        }
+
+        if(isset($filters['genres'])){
+            $genres = $filters['genres'];
+            $result->andWhere("g.id IN (:genres)")
+                ->setParameter("genres", $genres);
+        }
+
+        if(isset($filters['authors'])){
+            $authors = $filters['authors'];
+            $result->andWhere("a.id IN (:authors)")
+                ->setParameter("authors", $authors);
+        }
+
+
+        if(!$query){
+            return  $result->getResult();
+        }else{
+            return  $result;
+        }
+
+    }
+
+
 }

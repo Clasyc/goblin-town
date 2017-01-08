@@ -40,6 +40,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         penalty: '@app_user.penalty_warning'
+        searchFilters: '@app.search'
 
 
 # Doctrine Configuration

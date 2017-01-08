@@ -4,6 +4,7 @@
     {{ parent() }}
     {% stylesheets
     '@AppBundle/Resources/public/css/readers/books-list.css'
+
     %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
@@ -12,7 +13,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts %}
+    {% javascripts
+    '@AppBundle/Resources/public/js/books-list/main.js'
+    %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
@@ -87,9 +90,9 @@
                             {{ book.fkLanguage.language }}
                         </div>
                         <div class="col-md-2">
-                            <a href={{ path('book_admins_book-edit', { 'bookId' : book.id } ) }} class="btn btn-sm btn-success"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a href={{ path('book-delete', { 'bookId' : book.id } ) }}  class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-                            <a href={{ path('book_admins_books-view', { 'bookId' : book.id } ) }} class="btn btn-sm btn-info"><span class="glyphicon glyphicon-info-sign"></span></a>
+                            <a href="{{ path('book_admins_book-edit', { 'bookId' : book.id } ) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="{{ path('book-delete', { 'bookId' : book.id } ) }}"  class="btn btn-xs btn-default delete-book"><span class="glyphicon glyphicon-trash"></span></a>
+                            <a href="{{ path('book_admins_books-view', { 'bookId' : book.id } ) }}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-info-sign"></span></a>
                         </div>
                     </div>
                 </div>
