@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\ReadersSubsystem;
 
-use AppBundle\Entity\Wishlists;
+use AppBundle\Entity\Penalty;
 use AppBundle\Form\Type\ReaderRegistration_NoFosType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

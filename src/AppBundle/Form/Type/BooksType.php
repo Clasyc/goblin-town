@@ -287,7 +287,7 @@ class BooksType extends AbstractType
             }
         });
 
-        $builder->add('save', SubmitType::class);
+        $builder->add('Saugoti', SubmitType::class);
 
     }
 

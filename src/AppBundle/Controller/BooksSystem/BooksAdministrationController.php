@@ -30,7 +30,7 @@ class BooksAdministrationController extends Controller
             'Knyga istrinta'
         );
 
-        return $this->redirectToRoute('book_admins_books-list');
+        return $this->redirectToRoute('book_admins-list-search');
     }
 
 
@@ -65,7 +65,7 @@ class BooksAdministrationController extends Controller
                 'success',
                 'Knyga sėkmingai pridėta!'
             );
-            return $this->redirectToRoute('book_admins_books-list');
+            return $this->redirectToRoute('book_admins-list-search');
         } else {
             $errors = $form->getErrors(true);
             if (!empty($errors)) {
@@ -127,7 +127,7 @@ class BooksAdministrationController extends Controller
                 'success',
                 'Knyga sėkmingai redaguota!'
             );
-            return $this->redirectToRoute('book_admins_books-list');
+            return $this->redirectToRoute('book_admins-list-search');
         }
 
         return $this->render('default/ROLE_booksAdmin/edit-book.html.twig', [

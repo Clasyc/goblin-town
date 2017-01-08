@@ -16,7 +16,7 @@ class BooksSearchController extends Controller
 {
 
     /**
-    * @Route("/booksAdmin/books-list/", name="book_admins-search")
+    * @Route("/booksAdmin/books-list/{page}", name="book_admins-list-search")
     */
     public function searchAction(Request $request, $page = 1)
     {
@@ -42,7 +42,7 @@ class BooksSearchController extends Controller
             $pagination = $paginator->paginate(
                 $books, /* query NOT result */
                 $page/*page number*/,
-                10/*limit per page*/
+                20/*limit per page*/
             );
 
             return $this->render('default/ROLE_booksAdmin/search-list.html.twig', [
@@ -68,7 +68,7 @@ class BooksSearchController extends Controller
         $pagination = $paginator->paginate(
             $books, /* query NOT result */
             $page/*page number*/,
-            10/*limit per page*/
+            20/*limit per page*/
         );
 
 

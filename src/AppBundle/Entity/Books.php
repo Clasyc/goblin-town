@@ -127,7 +127,7 @@ class Books
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Orders", mappedBy="fkBook", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Orders", mappedBy="fkBook", cascade={"remove"})
      */
     private $orders;
 

@@ -35,7 +35,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
         }else if ($this->authorizationChecker->isGranted('ROLE_READERS_ADMIN')) {
             $response = new RedirectResponse($this->router->generate('readers-admin_readers-list'));
         }else if ($this->authorizationChecker->isGranted('ROLE_BOOKS_ADMIN')) {
-            $response = new RedirectResponse($this->router->generate('book_admins_books-list'));
+            $response = new RedirectResponse($this->router->generate('book_admins-list-search'));
         }else if ($this->authorizationChecker->isGranted('ROLE_EMPLOYEE')) {
             $response = new RedirectResponse($this->router->generate('orders_employee-orders-list'));
         }

@@ -46,7 +46,7 @@
                     </li>
                 {% elseif is_granted('ROLE_BOOKS_ADMIN') %}
                     <li>
-                        <a href="{{ path('book_admins-search') }}">Knygos</a>
+                        <a href="{{ path('book_admins-list-search') }}">Knygos</a>
                     </li>
                     <li>
                         <a href="{{ path('book_admins_books-report-form') }}">Ataskaita</a>
@@ -63,7 +63,7 @@
                         {% endif %}
 
                         {% if is_granted('ROLE_BOOKS_ADMIN') %}
-                            <li><a href="{{ path('book_admins_books-list') }}">Knygų sąrašas</a></li>
+                            <li><a href="{{ path('book_admins-list-search') }}">Knygų sąrašas</a></li>
                             <li><a href="{{ path('book_admins_books-report-form') }}">Knygų ataskaita</a></li>
                             <li><a href="{{ path('book_admins_book-add') }}">Pridėti knygą</a></li>
                         {% endif %}
